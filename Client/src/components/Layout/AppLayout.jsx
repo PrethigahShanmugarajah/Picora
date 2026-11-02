@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // Client / src / components / Layout / AppLayout.jsx
 import { useAppContext } from "../../context/appContext";
 import { useState } from "react";
@@ -6,6 +5,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import CreateAlbumModal from "../Albums/CreateAlbumModal";
+import UploadModal from "../Photos/UploadModal";
 
 const AppLayout = () => {
   const { navigate, location } = useAppContext();
@@ -59,7 +59,13 @@ const AppLayout = () => {
         />
 
         <main className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 md:p-8 bg-slate-50/50">
-          <Outlet />
+          <Outlet
+            context={{
+              searchQuery,
+              onOpenUpload: () => setIsUploadOpen(true),
+              openCreateAlbum,
+            }}
+          />
         </main>
       </div>
 
@@ -68,6 +74,12 @@ const AppLayout = () => {
         onClose={() => setCreateAlbumState({ isOpen: false, photoIds: [] })}
         onAlbumCreated={handleAlbumCreated}
         initialPhotoIds={createAlbumState.photoIds}
+      />
+
+      <UploadModal
+        isOpen={isUploadOpen}
+        onClose={() => setIsUploadOpen(false)}
+        onUploadSuccess={handleUploadSuccess}
       />
     </div>
   );
