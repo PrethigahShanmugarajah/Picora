@@ -1,0 +1,11 @@
+// Client / src / components / Layout / Sidebar.jsx
+
+const Sidebar = () => {
+  return (
+    <div>
+      <h1>Sidebar</h1>
+    </div>
+  );
+};
+
+export default Sidebar;
