@@ -12,7 +12,15 @@ import Trash from "./pages/Trash/View/Trash";
 const App = () => {
   return (
     <>
-      <Toaster position="bottom-right" />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            color: "#000000",
+            fontFamily: '"Inria Serif", serif',
+          },
+        }}
+      />
 
       <Routes>
         <Route path="/login" element={<Auth />} />
