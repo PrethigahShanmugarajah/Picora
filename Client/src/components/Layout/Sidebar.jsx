@@ -105,7 +105,7 @@ const Sidebar = ({
             >
               <PlusIcon className="size-4" />
 
-              <span>Create Album</span>
+              <span>Upload Photos</span>
             </button>
 
             <button
