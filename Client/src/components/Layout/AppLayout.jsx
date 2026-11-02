@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 // Client / src / components / Layout / AppLayout.jsx
-import { useEffect, useState } from "react";
+import { useAppContext } from "../../context/appContext";
+import { useState } from "react";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
-import { useAppContext } from "../../context/appContext";
+import CreateAlbumModal from "../Albums/CreateAlbumModal";
 
 const AppLayout = () => {
   const { navigate, location } = useAppContext();
@@ -61,6 +62,13 @@ const AppLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      <CreateAlbumModal
+        isOpen={createAlbumState.isOpen}
+        onClose={() => setCreateAlbumState({ isOpen: false, photoIds: [] })}
+        onAlbumCreated={handleAlbumCreated}
+        initialPhotoIds={createAlbumState.photoIds}
+      />
     </div>
   );
 };
