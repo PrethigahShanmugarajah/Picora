@@ -2,6 +2,8 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DUMMY_MEDIA } from "../../../assets/assets";
+import PageHeader from "../../../components/PageHeader";
+import { StarIcon } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
 import PhotoGrid from "../../../components/Photos/PhotoGrid";
 import PhotoLightbox from "../../../components/Photos/PhotoLightbox";
@@ -42,7 +44,7 @@ const Favorites = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between pb-2 border-b border-slate-200/60">
-        <div>
+        {/* <div>
           <h2 className="text-2xl font-medium text-slate-900 tracking-tight flex items-center gap-2">
             Favorites
             {photos.length > 0 && (
@@ -55,7 +57,14 @@ const Favorites = () => {
           <p className="text-xs text-slate-500 mt-0.5">
             Your starred photos and videos for quick access
           </p>
-        </div>
+        </div> */}
+
+        <PageHeader
+          icon={StarIcon}
+          title="Favorites"
+          count={photos.length}
+          description="Your starred photos and videos for quick access"
+        />
       </div>
 
       {loading ? (
