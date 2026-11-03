@@ -7,7 +7,7 @@ import PhotoGrid from "../../../components/Photos/PhotoGrid";
 import PhotoLightbox from "../../../components/Photos/PhotoLightbox";
 
 const Favorites = () => {
-  const { searchQuery } = useOutletContext;
+  const { searchQuery } = useOutletContext();
 
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
