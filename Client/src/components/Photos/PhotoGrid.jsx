@@ -1,4 +1,4 @@
-// Client / src / components / Photos / UploadModal.jsx
+// Client / src / components / Photos / PhotoGrid.jsx
 import { useMemo } from "react";
 import { CheckCircle2Icon } from "lucide-react";
 import PhotoCard from "./PhotoCard";
