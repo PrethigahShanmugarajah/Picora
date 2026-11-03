@@ -2,6 +2,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DUMMY_MEDIA } from "../../../assets/assets";
+import PageHeader from "../../../components/PageHeader";
 import { FilmIcon, ImageIcon, Upload } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
 import PhotoGrid from "../../../components/Photos/PhotoGrid";
@@ -55,7 +56,7 @@ const Photos = () => {
       {/* -------- Header Information -------- */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/60">
         {/* -------- Left -------- */}
-        <div>
+        {/* <div>
           <h2 className="text-2xl font-medium text-slate-900 tracking-tight flex items-center gap-2">
             Photos & Videos{" "}
             {photos.length > 0 && (
@@ -69,7 +70,14 @@ const Photos = () => {
             All your preserved photos and videos, automatically organized by
             date
           </p>
-        </div>
+        </div> */}
+
+        <PageHeader
+          icon={ImageIcon}
+          title="Photos & Videos"
+          count={photos.length}
+          description="All your preserved photos and videos, automatically organized by date"
+        />
 
         {/* -------- Right -------- */}
         <div className="flex items-center gap-2.5">
