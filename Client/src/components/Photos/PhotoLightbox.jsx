@@ -1,4 +1,4 @@
-// Client / src / components / Photos / UploadModal.jsx
+// Client / src / components / Photos / PhotoLightbox.jsx
 import { useState, useEffect, useCallback } from "react";
 import {
   X,
