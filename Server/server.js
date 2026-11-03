@@ -3,11 +3,13 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { port } from "./config/env.js";
+import connectDB from "./config/db.js";
 
 /* -------- INITIALIZE EXPRESS -------- */
 const app = express();
 
 /* -------- CONNECT TO DATABASE -------- */
+connectDB();
 
 /* -------- MIDDLEWARE CONFIGURATION -------- */
 app.use(cors());
