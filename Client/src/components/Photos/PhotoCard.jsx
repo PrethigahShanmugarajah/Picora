@@ -81,7 +81,7 @@ const PhotoCard = ({
                 e.stopPropagation();
                 onRemoveFromAlbum(e);
               }}
-              className="p-1.5 rounded-full transition-all cursor-pointer bg-white/80 backdrop-blur-xs text-slate-600 hover:text-red-600! hover:bg-white opacity-0 group-hover:opacity-100"
+              className="p-1.5 rounded-full! transition-all cursor-pointer bg-white/80 backdrop-blur-xs text-slate-600 hover:text-red-600! hover:bg-white opacity-0 group-hover:opacity-100"
               title="Remove from album"
             >
               <XIcon className="size-3.5" />
