@@ -104,3 +104,88 @@ export const registerUser = async (req, res) => {
     });
   }
 };
+
+/* -------- Login User -------- */
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (typeof email !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Email must be a valid string.",
+      });
+    }
+
+    if (typeof password !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Password must be a valid string.",
+      });
+    }
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required.",
+      });
+    }
+
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: "Password is required.",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const user = await User.findOne({ email: normalizedEmail }).select(
+      "+password",
+    );
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "No account was found with the provided email address.",
+      });
+    }
+
+    if (!user.password) {
+      return res.status(401).json({
+        success: false,
+        message: "Password authentication is not available for this account.",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "The password you entered is incorrect.",
+      });
+    }
+
+    const token = signToken(user);
+
+    return res.status(200).json({
+      success: true,
+      message: "You have logged in successfully.",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Login User Error:", error?.stack || error?.message || error);
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while logging in.",
+      error: `Login User Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
