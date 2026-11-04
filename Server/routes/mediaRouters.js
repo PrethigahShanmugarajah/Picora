@@ -8,6 +8,7 @@ import {
   getStorageStats,
   getTrash,
   toggleFavorite,
+  toggleTrash,
   uploadMedia,
 } from "../controllers/mediaControllers.js";
 
@@ -29,5 +30,7 @@ mediaRouter.delete("/trash/empty", requireAuth, emptyTrash);
 mediaRouter.get("/stats", requireAuth, getStorageStats);
 
 mediaRouter.patch("/:id/favorite", requireAuth, toggleFavorite);
+
+mediaRouter.patch("/:id/trash", requireAuth, toggleTrash);
 
 export default mediaRouter;
