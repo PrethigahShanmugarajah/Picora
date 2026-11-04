@@ -3,6 +3,7 @@ import express from "express";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
 import {
+  deleteMediaPermanent,
   emptyTrash,
   getMedia,
   getStorageStats,
@@ -32,5 +33,7 @@ mediaRouter.get("/stats", requireAuth, getStorageStats);
 mediaRouter.patch("/:id/favorite", requireAuth, toggleFavorite);
 
 mediaRouter.patch("/:id/trash", requireAuth, toggleTrash);
+
+mediaRouter.delete("/:id", requireAuth, deleteMediaPermanent);
 
 export default mediaRouter;
