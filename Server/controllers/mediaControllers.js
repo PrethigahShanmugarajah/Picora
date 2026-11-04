@@ -172,3 +172,30 @@ export const getMedia = async (req, res) => {
     });
   }
 };
+
+/* -------- Get Trash -------- */
+export const getTrash = async (req, res) => {
+  try {
+    const media = await Media.find({
+      owner: req.user?.id,
+      isTrash: true,
+    }).sort({ trashedAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message:
+        media.length === 0
+          ? "No trashed media found."
+          : "Trash media retrieved successfully.",
+      media,
+    });
+  } catch (error) {
+    console.error("Get Trash Error:", error?.stack || error?.message || error);
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while retrieving your trash.",
+      error: `Get Trash Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
