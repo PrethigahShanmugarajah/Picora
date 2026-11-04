@@ -1,0 +1,16 @@
+// Server / routes / mediaRouters.js
+import express from "express";
+import { requireAuth } from "../middleware/auth.js";
+import { upload } from "../middleware/upload.js";
+import { uploadMedia } from "../controllers/mediaControllers.js";
+
+const mediaRouter = express.Router();
+
+mediaRouter.post(
+  "/upload",
+  requireAuth,
+  upload.array("media", 20),
+  uploadMedia,
+);
+
+export default mediaRouter;
