@@ -146,3 +146,38 @@ export const getAlbumById = async (req, res) => {
     });
   }
 };
+
+/* -------- Delete Album -------- */
+export const deleteAlbum = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const album = await Album.findOneAndDelete({
+      _id: id,
+      owner: req.user?.id,
+    });
+
+    if (!album) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested album could not be found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Album deleted successfully.",
+    });
+  } catch (error) {
+    console.error(
+      "Delete Album Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while deleting the album.",
+      error: `Delete Album Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
