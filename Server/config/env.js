@@ -14,3 +14,13 @@ export const projectName = process.env.PROJECT_NAME;
 if (!projectName) {
   throw new Error("PROJECT_NAME environment variable not set!");
 }
+
+export const jwtSecret = process.env.JWT_SECRET?.trim();
+if (!jwtSecret) {
+  throw new Error("JWT_SECRET environment variable not set!");
+}
+
+export const jwtExpiresIn = process.env.JWT_EXPIRES_IN?.trim();
+if (!jwtExpiresIn) {
+  throw new Error("JWT_EXPIRES_IN environment variable not set!");
+}
