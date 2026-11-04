@@ -69,3 +69,40 @@ export const createAlbum = async (req, res) => {
     });
   }
 };
+
+/* -------- Get My Albums -------- */
+export const getMyAlbums = async (req, res) => {
+  try {
+    const albums = await Album.find({ owner: req.user?.id })
+      .populate("owner", "name email")
+      .populate({
+        path: "photos",
+        match: { isTrash: false },
+        select: "thumbnailUrl url mediaType title",
+      })
+      .sort({ updatedAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message:
+        albums.length === 0
+          ? "No albums found."
+          : albums.length === 1
+            ? "Album retrieved successfully."
+            : "Albums retrieved successfully.",
+      count: albums.length,
+      albums,
+    });
+  } catch (error) {
+    console.error(
+      "Get My Albums Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while retrieving your albums.",
+      error: `Get My Albums Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
