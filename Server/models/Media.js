@@ -62,6 +62,23 @@ const mediaSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+
+    isFavorite: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+
+    isTrash: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+
+    objects: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true },
 );
