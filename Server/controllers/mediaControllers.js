@@ -2,6 +2,7 @@
 import { imagekit, toFile } from "../config/imageKit.js";
 import { imagekitUrlEndpoint } from "../config/env.js";
 import Media from "../models/Media.js";
+import Album from "../models/Album.js";
 
 /* -------- Upload Media -------- */
 export const uploadMedia = async (req, res) => {
@@ -181,12 +182,32 @@ export const getTrash = async (req, res) => {
       isTrash: true,
     }).sort({ trashedAt: -1 });
 
+    const counts = media.reduce(
+      (result, item) => {
+        result.totalTrash++;
+
+        if (item.mediaType === "image") {
+          result.totalImages++;
+        } else if (item.mediaType === "video") {
+          result.totalVideos++;
+        }
+
+        return result;
+      },
+      {
+        totalTrash: 0,
+        totalImages: 0,
+        totalVideos: 0,
+      },
+    );
+
     return res.status(200).json({
       success: true,
       message:
         media.length === 0
           ? "No trashed media found."
           : "Trash media retrieved successfully.",
+      counts,
       media,
     });
   } catch (error) {
@@ -196,6 +217,58 @@ export const getTrash = async (req, res) => {
       success: false,
       message: "An unexpected error occurred while retrieving your trash.",
       error: `Get Trash Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
+
+/* -------- Empty Trash -------- */
+export const emptyTrash = async (req, res) => {
+  try {
+    const trashedMedia = await Media.find({
+      owner: req.user?.id,
+      isTrash: true,
+    });
+
+    for (const item of trashedMedia) {
+      try {
+        await imagekit.files.delete(item.fileId);
+      } catch (error1) {
+        if (error1?.status === 404) {
+          console.warn(
+            `[ImageKit] File not found. Continuing database cleanup: ${item.fileId}`,
+          );
+        } else {
+          console.error("[ImageKit] File deletion failed:", error1?.message);
+
+          throw error1;
+        }
+      }
+
+      await Album.updateMany(
+        { photos: item._id },
+        { $pull: { photos: item._id } },
+      );
+
+      await item.deleteOne();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message:
+        trashedMedia.length === 0
+          ? "Your trash is already empty."
+          : `Trash emptied successfully. ${trashedMedia.length} items removed.`,
+    });
+  } catch (error) {
+    console.error(
+      "Empty Trash Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while emptying your trash.",
+      error: `Empty Trash Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
