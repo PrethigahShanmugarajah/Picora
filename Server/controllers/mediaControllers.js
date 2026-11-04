@@ -314,3 +314,41 @@ export const getStorageStats = async (req, res) => {
     });
   }
 };
+
+/* -------- Toggle Favorite -------- */
+export const toggleFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const item = await Media.findOne({ _id: id, owner: req.user?.id });
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested media could not be found.",
+      });
+    }
+
+    item.isFavorite = !item.isFavorite;
+    await item.save();
+
+    return res.status(200).json({
+      success: true,
+      message: item.isFavorite
+        ? "Media added to favorites successfully."
+        : "Media removed from favorites successfully.",
+      media: item,
+    });
+  } catch (error) {
+    console.error(
+      "Toggle Favorite Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred while updating the favorite status.",
+      error: `Toggle Favorite Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
