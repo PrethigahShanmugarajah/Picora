@@ -411,3 +411,62 @@ export const toggleTrash = async (req, res) => {
     });
   }
 };
+
+/* -------- Delete Media Permanently -------- */
+export const deleteMediaPermanent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const item = await Media.findOne({
+      _id: id,
+      owner: req.user?.id,
+      isTrash: true,
+    });
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested media could not be found in trash.",
+      });
+    }
+
+    if (item.fileId) {
+      try {
+        await imagekit.files.delete(item.fileId);
+      } catch (error1) {
+        if (error1?.status === 404) {
+          console.warn(
+            `[ImageKit] File not found. Continuing database cleanup: ${item.fileId}`,
+          );
+        } else {
+          console.error("[ImageKit] File deletion failed:", error1?.message);
+          throw error1;
+        }
+      }
+    }
+
+    await Album.updateMany(
+      { photos: item._id },
+      { $pull: { photos: item._id } },
+    );
+
+    await item.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Media permanently deleted successfully.",
+    });
+  } catch (error) {
+    console.error(
+      "Delete Media Permanently Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred while permanently deleting your media.",
+      error: `Delete Media Permanently Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
