@@ -7,6 +7,7 @@ import {
   deleteAlbum,
   getAlbumById,
   getMyAlbums,
+  removePhotosFromAlbum,
 } from "../controllers/albumControllers.js";
 
 const albumRouter = express.Router();
@@ -16,5 +17,6 @@ albumRouter.get("/", requireAuth, getMyAlbums);
 albumRouter.get("/:id", requireAuth, getAlbumById);
 albumRouter.delete("/:id", requireAuth, deleteAlbum);
 albumRouter.post("/:id/photos", requireAuth, addPhotosToAlbum);
+albumRouter.delete("/:id/photos/:photoId", requireAuth, removePhotosFromAlbum);
 
 export default albumRouter;
