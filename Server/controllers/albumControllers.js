@@ -106,3 +106,43 @@ export const getMyAlbums = async (req, res) => {
     });
   }
 };
+
+/* -------- Get Album By ID -------- */
+export const getAlbumById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const album = await Album.findOne({ _id: id, owner: req.user?.id })
+      .populate("owner", "name email")
+      .populate({
+        path: "photos",
+        match: { isTrash: false },
+        options: { sort: { createdAt: -1 } },
+      })
+      .sort({ updatedAt: -1 });
+
+    if (!album) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested album could not be found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Album retrieved successfully.",
+      album,
+    });
+  } catch (error) {
+    console.error(
+      "Get Album By ID Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while retrieving the album.",
+      error: `Get Album By ID Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
