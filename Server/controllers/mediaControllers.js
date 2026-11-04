@@ -54,7 +54,7 @@ export const uploadMedia = async (req, res) => {
 
       const title = file.originalname;
       const endpoint = imagekitUrlEndpoint;
-      const imagePath = ikRes.filePath;
+      const imagePath = ikRes.filePath.replace(/^\/+/, "");
       const transformation = "tr:w-400";
       const thumbnailUrl = isVideo
         ? `${endpoint}/${transformation}/${imagePath}/ik-thumbnail.jpg`
@@ -321,6 +321,14 @@ export const getStorageStats = async (req, res) => {
 export const toggleFavorite = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided media ID is invalid.",
+      });
+    }
+
     const item = await Media.findOne({ _id: id, owner: req.user?.id });
 
     if (!item) {
@@ -359,6 +367,14 @@ export const toggleFavorite = async (req, res) => {
 export const toggleTrash = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided media ID is invalid.",
+      });
+    }
+
     const { restore } = req.body || {};
 
     if (typeof restore !== "boolean") {
@@ -418,6 +434,13 @@ export const toggleTrash = async (req, res) => {
 export const deleteMediaPermanent = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided media ID is invalid.",
+      });
+    }
 
     const item = await Media.findOne({
       _id: id,
