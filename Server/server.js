@@ -5,6 +5,7 @@ import cors from "cors";
 import { port } from "./config/env.js";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRouters.js";
+import mediaRouter from "./routes/mediaRouters.js";
 
 /* -------- INITIALIZE EXPRESS -------- */
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.json({ limit: "50mb" }));
 /* -------- ROUTES -------- */
 app.get("/", (req, res) => res.send("API is Working!"));
 app.use("/api/auth", authRouter);
+app.use("/api/media", mediaRouter);
 
 app.use((error, _req, res, _next) => {
   console.error(error?.stack || error?.message || error);
