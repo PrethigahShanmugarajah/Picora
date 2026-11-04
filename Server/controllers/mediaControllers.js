@@ -352,3 +352,62 @@ export const toggleFavorite = async (req, res) => {
     });
   }
 };
+
+/* -------- Toggle Trash -------- */
+export const toggleTrash = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { restore } = req.body || {};
+
+    if (typeof restore !== "boolean") {
+      return res.status(400).json({
+        success: false,
+        message: "The restore value must be a boolean.",
+      });
+    }
+
+    const item = await Media.findOne({ _id: id, owner: req.user?.id });
+
+    if (!item) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested media could not be found.",
+      });
+    }
+
+    if (item.isTrash === !restore) {
+      return res.status(200).json({
+        success: true,
+        message: restore
+          ? "Media is already restored."
+          : "Media is already in trash.",
+        media: item,
+      });
+    }
+
+    item.isTrash = !restore;
+    item.trashedAt = restore ? null : new Date();
+
+    await item.save();
+
+    return res.status(200).json({
+      success: true,
+      message: restore
+        ? "Media restored successfully."
+        : "Media moved to trash successfully.",
+      media: item,
+    });
+  } catch (error) {
+    console.error(
+      "Toggle Trash Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred while updating the media trash status.",
+      error: `Toggle Trash Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
