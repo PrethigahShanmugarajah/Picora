@@ -282,3 +282,60 @@ export const addPhotosToAlbum = async (req, res) => {
     });
   }
 };
+
+/* -------- Remove Photos From Album -------- */
+export const removePhotosFromAlbum = async (req, res) => {
+  try {
+    const { id, photoId } = req.params;
+
+    if (
+      !mongoose.Types.ObjectId.isValid(id) ||
+      !mongoose.Types.ObjectId.isValid(photoId)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided album ID or photo ID is invalid.",
+      });
+    }
+
+    const album = await Album.findOne({ _id: id, owner: req.user?.id });
+
+    if (!album) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested album could not be found.",
+      });
+    }
+
+    const photoExists = album.photos.some((p) => p.toString() === photoId);
+
+    if (!photoExists) {
+      return res.status(404).json({
+        success: false,
+        message: "The requested photo could not be found in this album.",
+      });
+    }
+
+    album.photos = album.photos.filter((p) => p.toString() !== photoId);
+
+    await album.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Photo removed from the album successfully.",
+      album,
+    });
+  } catch (error) {
+    console.error(
+      "Remove Photos From Album Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred while removing the photo from the album.",
+      error: `Remove Photos From Album Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
