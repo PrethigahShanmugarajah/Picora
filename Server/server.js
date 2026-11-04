@@ -6,6 +6,7 @@ import { port } from "./config/env.js";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRouters.js";
 import mediaRouter from "./routes/mediaRouters.js";
+import albumRouter from "./routes/albumRouters.js";
 
 /* -------- INITIALIZE EXPRESS -------- */
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json({ limit: "50mb" }));
 app.get("/", (req, res) => res.send("API is Working!"));
 app.use("/api/auth", authRouter);
 app.use("/api/media", mediaRouter);
+app.use("/api/albums", albumRouter);
 
 app.use((error, _req, res, _next) => {
   console.error(error?.stack || error?.message || error);
