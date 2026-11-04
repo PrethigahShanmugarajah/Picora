@@ -22,7 +22,50 @@ export const createAlbum = async (req, res) => {
       });
     }
 
-    const validPhotos = Array.isArray(photoIds) ? photoIds : [];
+    let validPhotos = [];
+
+    if (photoIds !== undefined) {
+      if (!Array.isArray(photoIds)) {
+        return res.status(400).json({
+          success: false,
+          message: "Photo IDs must be provided as an array.",
+        });
+      }
+
+      if (photoIds.some((photoId) => typeof photoId !== "string")) {
+        return res.status(400).json({
+          success: false,
+          message: "All photo IDs must be provided as strings.",
+        });
+      }
+
+      if (
+        photoIds.some((photoId) => !mongoose.Types.ObjectId.isValid(photoId))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "One or more photo IDs are invalid.",
+        });
+      }
+
+      const uniquePhotoIds = [...new Set(photoIds)];
+
+      const foundPhotos = await Media.find({
+        _id: { $in: uniquePhotoIds },
+        owner: req.user?.id,
+        isTrash: false,
+      }).select("_id");
+
+      if (foundPhotos.length !== uniquePhotoIds.length) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "One or more selected photos were not found or are unavailable.",
+        });
+      }
+
+      validPhotos = uniquePhotoIds;
+    }
 
     const escapedTitle = title.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -55,7 +98,10 @@ export const createAlbum = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Album created successfully.",
+      message:
+        validPhotos.length > 0
+          ? "Album created and photos added successfully."
+          : "Album created successfully. No photos were added.",
       album: populated || album,
     });
   } catch (error) {
@@ -114,6 +160,13 @@ export const getAlbumById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided album ID is invalid.",
+      });
+    }
+
     const album = await Album.findOne({ _id: id, owner: req.user?.id })
       .populate("owner", "name email")
       .populate({
@@ -153,6 +206,13 @@ export const getAlbumById = async (req, res) => {
 export const deleteAlbum = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided album ID is invalid.",
+      });
+    }
 
     const album = await Album.findOneAndDelete({
       _id: id,
@@ -288,13 +348,17 @@ export const removePhotosFromAlbum = async (req, res) => {
   try {
     const { id, photoId } = req.params;
 
-    if (
-      !mongoose.Types.ObjectId.isValid(id) ||
-      !mongoose.Types.ObjectId.isValid(photoId)
-    ) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({
         success: false,
-        message: "The provided album ID or photo ID is invalid.",
+        message: "The provided album ID is invalid.",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(photoId)) {
+      return res.status(400).json({
+        success: false,
+        message: "The provided photo ID is invalid.",
       });
     }
 
