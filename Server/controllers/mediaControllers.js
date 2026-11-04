@@ -272,3 +272,45 @@ export const emptyTrash = async (req, res) => {
     });
   }
 };
+
+/* -------- Get Storage Stats -------- */
+export const getStorageStats = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const activeMedia = await Media.find({ owner: userId, isTrash: false });
+
+    const favoriteCount = activeMedia.filter((p) => p.isFavorite).length;
+    const totalBytes = activeMedia.reduce((sum, p) => sum + (p.size || 0), 0);
+
+    const albumCount = await Album.countDocuments({ owner: userId });
+
+    const videoCount = activeMedia.filter(
+      (p) => p.mediaType === "video",
+    ).length;
+
+    const imageCount = activeMedia.length - videoCount;
+
+    return res.status(200).json({
+      success: true,
+      message: "Storage statistics retrieved successfully.",
+      mediaCount: activeMedia.length,
+      imageCount,
+      videoCount,
+      favoriteCount,
+      totalBytes,
+      albumCount,
+    });
+  } catch (error) {
+    console.error(
+      "Get Storage Stats Error:",
+      error?.stack || error?.message || error,
+    );
+
+    return res.status(500).json({
+      success: false,
+      message:
+        "An unexpected error occurred while retrieving storage statistics.",
+      error: `Get Storage Stats Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
