@@ -257,7 +257,9 @@ export const emptyTrash = async (req, res) => {
       message:
         trashedMedia.length === 0
           ? "Your trash is already empty."
-          : `Trash emptied successfully. ${trashedMedia.length} items removed.`,
+          : trashedMedia.length === 1
+            ? "Trash emptied successfully. Item removed."
+            : `Trash emptied successfully. ${trashedMedia.length} items removed.`,
     });
   } catch (error) {
     console.error(
