@@ -2,7 +2,7 @@
 import express from "express";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { uploadMedia } from "../controllers/mediaControllers.js";
+import { getMedia, uploadMedia } from "../controllers/mediaControllers.js";
 
 const mediaRouter = express.Router();
 
@@ -12,5 +12,7 @@ mediaRouter.post(
   upload.array("media", 20),
   uploadMedia,
 );
+
+mediaRouter.get("/", requireAuth, getMedia);
 
 export default mediaRouter;
