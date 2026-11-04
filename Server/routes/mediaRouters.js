@@ -5,6 +5,7 @@ import { upload } from "../middleware/upload.js";
 import {
   emptyTrash,
   getMedia,
+  getStorageStats,
   getTrash,
   uploadMedia,
 } from "../controllers/mediaControllers.js";
@@ -23,5 +24,7 @@ mediaRouter.get("/", requireAuth, getMedia);
 mediaRouter.get("/trash", requireAuth, getTrash);
 
 mediaRouter.delete("/trash/empty", requireAuth, emptyTrash);
+
+mediaRouter.get("/stats", requireAuth, getStorageStats);
 
 export default mediaRouter;
