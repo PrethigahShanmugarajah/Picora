@@ -108,3 +108,67 @@ export const uploadMedia = async (req, res) => {
     });
   }
 };
+
+/* -------- Get Media -------- */
+export const getMedia = async (req, res) => {
+  try {
+    const { favorite, q, type } = req.query;
+    const filter = { owner: req.user?.id, isTrash: false };
+
+    if (favorite === "true") {
+      filter.isFavorite = true;
+    }
+
+    if (type === "video" || type === "image") {
+      filter.mediaType = type;
+    }
+
+    if (q && typeof q === "string" && q.trim()) {
+      const searchTerm = q.trim();
+
+      filter.$or = [
+        { title: { $regex: searchTerm, $options: "i" } },
+        { objects: { $regex: searchTerm, $options: "i" } },
+      ];
+    }
+
+    const media = await Media.find(filter).sort({ createdAt: -1 });
+
+    const counts = media.reduce(
+      (result, item) => {
+        result.totalMedia++;
+
+        if (item.mediaType === "image") {
+          result.totalImages++;
+        } else if (item.mediaType === "video") {
+          result.totalVideos++;
+        }
+
+        return result;
+      },
+      {
+        totalMedia: 0,
+        totalImages: 0,
+        totalVideos: 0,
+      },
+    );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        media.length === 0
+          ? "No media found."
+          : "Media retrieved successfully.",
+      counts,
+      media,
+    });
+  } catch (error) {
+    console.error("Get Media Error:", error?.stack || error?.message || error);
+
+    return res.status(500).json({
+      success: false,
+      message: "An unexpected error occurred while retrieving your media.",
+      error: `Get Media Error: ${error?.stack || error?.message || error}`,
+    });
+  }
+};
