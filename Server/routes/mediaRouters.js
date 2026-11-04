@@ -2,7 +2,11 @@
 import express from "express";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
-import { getMedia, uploadMedia } from "../controllers/mediaControllers.js";
+import {
+  getMedia,
+  getTrash,
+  uploadMedia,
+} from "../controllers/mediaControllers.js";
 
 const mediaRouter = express.Router();
 
@@ -14,5 +18,7 @@ mediaRouter.post(
 );
 
 mediaRouter.get("/", requireAuth, getMedia);
+
+mediaRouter.get("/trash", requireAuth, getTrash);
 
 export default mediaRouter;
