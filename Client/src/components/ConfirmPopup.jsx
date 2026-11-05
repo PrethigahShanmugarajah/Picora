@@ -87,12 +87,10 @@ const ConfirmPopup = ({
               type="button"
               onClick={onConfirm}
               disabled={!!loading}
-              className={`min-w-22.5 flex items-center justify-center rounded-lg px-4 py-2 transition disabled:opacity-60 ${
-                loading ? `border ${colors.border} bg-white` : colors.button
-              }`}
+              className={`min-w-22.5 flex items-center justify-center rounded-lg px-4 py-2 transition disabled:opacity-60 ${colors.button}`}
             >
               {loading ? (
-                <TailSpin height={18} width={18} color={colors.loader} />
+                <TailSpin height={18} width={18} color="#FFFFFF" />
               ) : (
                 confirmText
               )}
