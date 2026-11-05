@@ -136,3 +136,25 @@ export const createAlbum = async (payload) => {
     throw error;
   }
 };
+
+/* -------- Delete Album -------- */
+export const deleteAlbum = async (id) => {
+  try {
+    const { data } = await api.delete(`${API_ROUTES.ALBUM.BASE}/${id}`);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Delete Album Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to delete album.");
+      console.error("Delete Album Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Unable to delete album.");
+    console.error("Delete Album Error:", error);
+
+    throw error;
+  }
+};
