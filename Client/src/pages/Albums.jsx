@@ -1,34 +1,56 @@
-// Client / src / pages / Albums / View / Albums.jsx
+// Client / src / pages / Albums.jsx
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useAppContext } from "../../../context/appContext";
-import { DUMMY_ALBUMS_DATA } from "../../../assets/assets";
-import PageHeader from "../../../components/PageHeader";
+import { useAppContext } from "../context/appContext";
+import { fetchAlbums } from "../services/fetch";
+import { deleteAlbum } from "../services/mutations";
+import PageHeader from "../components/PageHeader";
 import { FolderHeartIcon, ImageIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
+import ConfirmPopup from "../components/ConfirmPopup";
 
 const Albums = () => {
   const { openCreateAlbum } = useOutletContext() || {};
 
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [albumToDelete, setAlbumToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const { navigate } = useAppContext();
 
-  const fetchAlbums = async () => {
-    setTimeout(() => {
-      setAlbums(DUMMY_ALBUMS_DATA);
+  const loadAlbums = async () => {
+    try {
+      const data = await fetchAlbums();
+      setAlbums(data.albums || []);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   useEffect(() => {
-    fetchAlbums();
+    loadAlbums();
   }, []);
 
-  const handleDeleteAlbum = async (e, id) => {
+  const handleDeleteAlbum = (e, album) => {
     e.stopPropagation();
-    console.log(id);
+    setAlbumToDelete(album);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!albumToDelete) {
+      return;
+    }
+
+    setDeleting(true);
+
+    try {
+      await deleteAlbum(albumToDelete._id);
+      setAlbums((prev) => prev.filter((a) => a._id !== albumToDelete._id));
+      setAlbumToDelete(null);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -117,7 +139,7 @@ const Albums = () => {
                       className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="size-full flex flex-col items-ce justify-center text-slate-300 bg-linear-to-br from-slate-100 to-slate-200/70">
+                    <div className="size-full flex flex-col items-center justify-center text-slate-300 bg-linear-to-br from-slate-100 to-slate-200/70">
                       <ImageIcon className="size-10 mb-1" />
 
                       <span className="text-[11px] font-medium text-slate-400">
@@ -142,7 +164,7 @@ const Albums = () => {
                   {/* -------- Action Buttons -------- */}
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                     <button
-                      onClick={(e) => handleDeleteAlbum(e, album._id)}
+                      onClick={(e) => handleDeleteAlbum(e, album)}
                       className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition cursor-pointer"
                       title="Delete Album"
                     >
@@ -154,6 +176,25 @@ const Albums = () => {
             );
           })}
         </div>
+      )}
+
+      {albumToDelete && (
+        <ConfirmPopup
+          onClose={() => setAlbumToDelete(null)}
+          onConfirm={handleConfirmDelete}
+          loading={deleting}
+          item={albumToDelete.title}
+          title="Delete Album?"
+          description={
+            <>
+              Are you sure you want to delete the album{" "}
+              <strong>{albumToDelete.title}</strong>? Photos inside won't be
+              deleted.
+            </>
+          }
+          confirmText="Delete"
+          closeText="Cancel"
+        />
       )}
     </div>
   );
