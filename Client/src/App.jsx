@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";
 import AppLayout from "./components/Layout/AppLayout";
 import Photos from "./pages/Photos";
-import Favorites from "./pages/Favorites/View/Favorites";
+import Favorites from "./pages/Favorites";
 import Albums from "./pages/Albums/View/Albums";
 import AlbumDetail from "./pages/AlbumDetail/View/AlbumDetail";
 import Trash from "./pages/Trash/View/Trash";
