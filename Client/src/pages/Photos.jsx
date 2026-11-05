@@ -3,7 +3,7 @@
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchPhotos } from "../services/fetch";
-import { moveToTrash, toggleFavorite } from "../services/mutations";
+import { updateMediaTrash, toggleFavorite } from "../services/mutations";
 import PageHeader from "../components/PageHeader";
 import { FilmIcon, ImageIcon, Upload } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
@@ -83,7 +83,7 @@ const Photos = () => {
 
   const handleTrash = async (id) => {
     try {
-      await moveToTrash(id);
+      await updateMediaTrash(id);
 
       setPhotos((prev) => prev.filter((p) => p._id !== id));
 
@@ -113,7 +113,7 @@ const Photos = () => {
   const handleBulkTrash = async () => {
     try {
       for (const id of selectedIds) {
-        await moveToTrash(id);
+        await updateMediaTrash(id);
       }
 
       await loadPhotos();
