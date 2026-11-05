@@ -1,12 +1,14 @@
-// Client / src / pages / Favorites / View / Favorites.jsx
+/* eslint-disable react-hooks/exhaustive-deps */
+// Client / src / pages / Favorites.jsx
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { DUMMY_MEDIA } from "../../../assets/assets";
-import PageHeader from "../../../components/PageHeader";
+import { fetchPhotos } from "../services/fetch";
+import { moveToTrash, toggleFavorite } from "../services/mutations";
+import PageHeader from "../components/PageHeader";
 import { StarIcon } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
-import PhotoGrid from "../../../components/Photos/PhotoGrid";
-import PhotoLightbox from "../../../components/Photos/PhotoLightbox";
+import PhotoGrid from "../components/Photos/PhotoGrid";
+import PhotoLightbox from "../components/Photos/PhotoLightbox";
 
 const Favorites = () => {
   const { searchQuery } = useOutletContext();
@@ -17,10 +19,16 @@ const Favorites = () => {
   const [activePhoto, setActivePhoto] = useState(null);
 
   const fetchFavorites = async () => {
-    setTimeout(() => {
-      setPhotos(DUMMY_MEDIA.slice(5, 9));
+    try {
+      const data = await fetchPhotos({
+        favorite: true,
+        ...(searchQuery && { q: searchQuery }),
+      });
+
+      setPhotos(data.media || []);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   useEffect(() => {
@@ -33,12 +41,32 @@ const Favorites = () => {
     );
   };
 
-  const toggleFavorite = async (id) => {
-    console.log(id);
+  const updateFavorite = async (id) => {
+    try {
+      await toggleFavorite(id);
+
+      setPhotos((prev) => prev.filter((p) => p._id !== id));
+
+      if (activePhoto && activePhoto._id === id) {
+        setActivePhoto(null);
+      }
+    } catch {
+      //
+    }
   };
 
   const handleTrash = async (id) => {
-    console.log(id);
+    try {
+      await moveToTrash(id);
+
+      setPhotos((prev) => prev.filter((p) => p._id !== id));
+
+      if (activePhoto && activePhoto._id === id) {
+        setActivePhoto(null);
+      }
+    } catch {
+      //
+    }
   };
 
   return (
@@ -93,7 +121,7 @@ const Favorites = () => {
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
           onSelectPhoto={() => setActivePhoto(photos)}
-          onToggleFavorite={toggleFavorite}
+          onToggleFavorite={updateFavorite}
         />
       )}
 
@@ -101,7 +129,7 @@ const Favorites = () => {
         photos={photos}
         currentPhoto={activePhoto}
         onClose={() => setActivePhoto(null)}
-        onToggleFavorite={toggleFavorite}
+        onToggleFavorite={updateFavorite}
         onTrashPhoto={handleTrash}
       />
     </div>
