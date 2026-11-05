@@ -27,3 +27,25 @@ export const fetchUser = async () => {
     throw error;
   }
 };
+
+/* -------- Fetch Stats -------- */
+export const fetchStats = async () => {
+  try {
+    const { data } = await api.get(API_ROUTES.MEDIA.STATS);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Fetch Stats Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to fetch statistics.");
+      console.error("Fetch Stats Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Fetch Stats Error:", error);
+
+    throw error;
+  }
+};
