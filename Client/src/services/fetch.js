@@ -93,3 +93,25 @@ export const fetchAlbums = async () => {
     throw error;
   }
 };
+
+/* -------- Fetch Trash -------- */
+export const fetchTrash = async () => {
+  try {
+    const { data } = await api.get(API_ROUTES.MEDIA.TRASH_BASE);
+
+    if (data?.success) {
+      // toast.success(data?.message);
+      console.log("Fetch Trash Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to fetch trash.");
+      console.error("Fetch Trash Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Fetch Trash Error:", error);
+
+    throw error;
+  }
+};
