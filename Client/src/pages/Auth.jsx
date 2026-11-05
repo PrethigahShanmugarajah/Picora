@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-// Client / src / pages / Auth / View / Auth.jsx
+// Client / src / pages / Auth.jsx
 import { useState } from "react";
 import { useAppContext } from "../../../context/appContext";
 import { Login_Ribbon, Logo } from "../../../assets/assets";
@@ -35,7 +34,7 @@ import { TailSpin } from "react-loader-spinner";
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -43,13 +42,26 @@ const Auth = () => {
     rememberMe: true,
   });
 
-  const { navigate } = useAppContext();
+  const { navigate, loading, setLoading, login, register } = useAppContext();
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/");
+
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        await login(form.email, form.password);
+      } else {
+        await register(form.name, form.email, form.password);
+      }
+
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
