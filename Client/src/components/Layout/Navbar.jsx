@@ -19,13 +19,11 @@ const Navbar = ({
   onUploadClick,
   onToggleSidebar,
 }) => {
-  const { user } = { user: { name: "Sathya", email: "example@example.com" } };
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
-  const { navigate } = useAppContext();
+  const { user, logout } = useAppContext();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -117,7 +115,6 @@ const Navbar = ({
 
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-56 sm:w-64 bg-white rounded-2xl border border-slate-200 z-50 transition-all duration-150">
-              {" "}
               <div className="px-4 py-2 border-b border-slate-100">
                 <p className="font-medium text-slate-800 text-sm truncate">
                   {user?.name}
@@ -129,7 +126,7 @@ const Navbar = ({
                 <button
                   onClick={() => {
                     setDropdownOpen(false);
-                    navigate("/login");
+                    logout();
                   }}
                   className="w-full text-left px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 rounded-xl flex items-center gap-2 transition cursor-pointer"
                 >
