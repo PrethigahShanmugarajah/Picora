@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 // Client / src / components / Layout / Sidebar.jsx
-import { useState } from "react";
-import { DUMMY_STATS, Logo } from "../../assets/assets";
+import { useEffect, useState } from "react";
+import { fetchStats } from "../../services/fetch";
 import {
   FolderHeartIcon,
   HardDriveIcon,
@@ -10,6 +11,7 @@ import {
   Trash2Icon,
   XIcon,
 } from "lucide-react";
+import { Logo } from "../../assets/assets";
 import { NavLink } from "react-router-dom";
 
 const Sidebar = ({
@@ -18,20 +20,24 @@ const Sidebar = ({
   isMobileOpen = false,
   onCloseMobile,
 }) => {
-  // const [stats, setStats] = useState(null);
-  const [stats] = useState(DUMMY_STATS);
+  const [stats, setStats] = useState(null);
 
-  // const fetchStats = async () => {
-  //   setStats(DUMMY_STATS);
-  // };
+  const loadStats = async () => {
+    try {
+      const data = await fetchStats();
+      setStats(data);
+    } catch (error) {
+      console.log(error?.message);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchStats();
+  useEffect(() => {
+    loadStats();
 
-  //   const interval = setInterval(fetchStats, 15000);
+    const interval = setInterval(loadStats, 15000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   const storageUsed = stats?.totalBytes
     ? (stats.totalBytes / (1024 * 1024)).toFixed(1)
