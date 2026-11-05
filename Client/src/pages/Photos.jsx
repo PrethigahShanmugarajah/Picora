@@ -1,13 +1,15 @@
-// Client / src / pages / Photos / View / Photos.jsx
+/* eslint-disable react-hooks/exhaustive-deps */
+// Client / src / pages / Photos.jsx
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { DUMMY_MEDIA } from "../../../assets/assets";
-import PageHeader from "../../../components/PageHeader";
+import { fetchPhotos } from "../services/fetch";
+import { moveToTrash, toggleFavorite } from "../services/mutations";
+import PageHeader from "../components/PageHeader";
 import { FilmIcon, ImageIcon, Upload } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
-import PhotoGrid from "../../../components/Photos/PhotoGrid";
-import PhotoLightbox from "../../../components/Photos/PhotoLightbox";
-import BulkSelectionBar from "../../../components/Photos/BulkSelectionBar";
+import PhotoGrid from "../components/Photos/PhotoGrid";
+import PhotoLightbox from "../components/Photos/PhotoLightbox";
+import BulkSelectionBar from "../components/Photos/BulkSelectionBar";
 
 const Photos = () => {
   const { searchQuery, onOpenUpload, openCreateAlbum } = useOutletContext();
@@ -18,16 +20,41 @@ const Photos = () => {
   const [filterType, setFilterType] = useState("all");
   const [activePhoto, setActivePhoto] = useState(null);
 
-  const fetchPhotos = async () => {
-    setTimeout(() => {
-      setPhotos(DUMMY_MEDIA);
+  const loadPhotos = async () => {
+    try {
+      // const params = new URLSearchParams();
+
+      // if (searchQuery) {
+      //   params.append("q", searchQuery);
+      // }
+
+      // if (filterType !== "all") {
+      //   params.append("type", filterType);
+      // }
+
+      const data = await fetchPhotos({
+        ...(searchQuery && { q: searchQuery }),
+        ...(filterType !== "all" && { type: filterType }),
+      });
+
+      setPhotos(data.media || []);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
-    fetchPhotos();
+    loadPhotos();
   }, [searchQuery, filterType]);
+
+  useEffect(() => {
+    const handleRefresh = () => loadPhotos();
+    window.addEventListener("media-uploaded", handleRefresh);
+
+    return () => {
+      window.removeEventListener("media-uploaded", handleRefresh);
+    };
+  }, []);
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -35,20 +62,65 @@ const Photos = () => {
     );
   };
 
-  const toggleFavorite = async (id) => {
-    console.log(id);
+  const updateFavorite = async (id) => {
+    try {
+      const res = await toggleFavorite(id);
+      const updated = res.media;
+
+      setPhotos((prev) =>
+        prev.map((p) =>
+          p._id === id ? { ...p, isFavorite: updated.isFavorite } : p,
+        ),
+      );
+
+      if (activePhoto && activePhoto._id === id) {
+        setActivePhoto({ ...activePhoto, isFavorite: updated.isFavorite });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleTrash = async (id) => {
-    console.log(id);
+    try {
+      await moveToTrash(id);
+
+      setPhotos((prev) => prev.filter((p) => p._id !== id));
+
+      setSelectedIds((prev) => prev.filter((i) => i !== id));
+
+      if (activePhoto && activePhoto._id === id) {
+        setActivePhoto(null);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleBulkFavorite = async () => {
-    console.log(selectedIds);
+    try {
+      for (const id of selectedIds) {
+        await toggleFavorite(id);
+      }
+
+      await loadPhotos();
+      setSelectedIds([]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleBulkTrash = async () => {
-    console.log(selectedIds);
+    try {
+      for (const id of selectedIds) {
+        await moveToTrash(id);
+      }
+
+      await loadPhotos();
+      setSelectedIds([]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -156,7 +228,7 @@ const Photos = () => {
           photos={photos}
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
-          onToggleFavorite={toggleFavorite}
+          onToggleFavorite={updateFavorite}
           onSelectPhoto={(photo) => setActivePhoto(photo)}
         />
       )}
@@ -165,7 +237,7 @@ const Photos = () => {
         photos={photos}
         currentPhoto={activePhoto}
         onClose={() => setActivePhoto(null)}
-        onToggleFavorite={toggleFavorite}
+        onToggleFavorite={updateFavorite}
         onTrashPhoto={handleTrash}
         onAddToAlbum={(photo) => {
           openCreateAlbum?.(photo._id);
