@@ -95,7 +95,7 @@ const PhotoCard = ({
             }}
             className={
               photo.isFavorite
-                ? "p-1.5 rounded-full transition-all cursor-pointer bg-white text-cyan-500 scale-100 opacity-100"
+                ? "p-1.5 rounded-full! transition-all cursor-pointer bg-white text-cyan-500 scale-100 opacity-100"
                 : "p-1.5 rounded-full! transition-all cursor-pointer bg-white/80 backdrop-blur-xs text-slate-600 hover:text-cyan-500 hover:bg-white opacity-0 group-hover:opacity-100"
             }
             title={
