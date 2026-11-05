@@ -108,10 +108,30 @@ export const uploadMedia = async (formData) => {
 
     return data;
   } catch (error) {
-    toast.error(
-      error?.response?.data?.message || "Unable to upload media.",
-    );
+    toast.error(error?.response?.data?.message || "Unable to upload media.");
     console.error("Upload Media Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Create Album -------- */
+export const createAlbum = async (payload) => {
+  try {
+    const { data } = await api.post(API_ROUTES.ALBUM.BASE, payload);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Create Album Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to create album.");
+      console.error("Create Album Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Unable to create album.");
+    console.error("Create Album Error:", error);
 
     throw error;
   }
