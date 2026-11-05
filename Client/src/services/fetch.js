@@ -71,3 +71,25 @@ export const fetchPhotos = async (params = {}) => {
     throw error;
   }
 };
+
+/* -------- Fetch Albums -------- */
+export const fetchAlbums = async () => {
+  try {
+    const { data } = await api.get(API_ROUTES.ALBUM.BASE);
+
+    if (data?.success) {
+      // toast.success(data?.message);
+      console.log("Fetch Albums Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to fetch albums.");
+      console.error("Fetch Albums Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Fetch Albums Error:", error);
+
+    throw error;
+  }
+};
