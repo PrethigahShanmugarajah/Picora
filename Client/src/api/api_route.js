@@ -6,9 +6,13 @@ const API_ROUTES = {
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
   },
-  
+
   MEDIA: {
     STATS: "/api/media/stats",
+    BASE: "/api/media",
+    FAVORITE: (id) => `/api/media/${id}/favorite`,
+    TRASH: (id) => `/api/media/${id}/trash`,
+    UPLOAD: "/api/media/upload",
   },
 };
 
