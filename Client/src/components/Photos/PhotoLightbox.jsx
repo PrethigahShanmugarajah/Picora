@@ -18,6 +18,9 @@ import {
   Film,
   SparkleIcon,
 } from "lucide-react";
+import { Video } from "@imagekit/react";
+
+const urlEndpoint = import.meta.env.VITE_IMAGEKIT_URL_ENDPOINT;
 
 const PhotoLightbox = ({
   photos,
@@ -189,11 +192,13 @@ const PhotoLightbox = ({
               key={activePhoto._id}
               className="w-full max-w-4xl max-h-[82vh] flex items-center justify-center overflow-hidden rounded-2xl shadow-2xl bg-black"
             >
-              <video
-                src={activePhoto.url}
-                controls
-                autoPlay
-                playsInline
+              <Video
+                urlEndpoint={urlEndpoint}
+                src={activePhoto.url} 
+                poster={activePhoto.thumbnailUrl || undefined}
+                controls={true}
+                autoPlay={true}
+                playsInline={true}
                 className="max-w-full max-h-[80vh] rounded-xl outline-none"
               />
             </div>
