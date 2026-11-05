@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 // Client / src / components / Photos / UploadModal.jsx
-import { Film, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { uploadMedia } from "../../services/mutations";
+import { Film, X } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
 
 const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
@@ -53,8 +53,26 @@ const UploadModal = ({ isOpen, onClose, onUploadSuccess }) => {
   };
 
   const handleUpload = async () => {
-    console.log(selectedFiles);
-    handleClose();
+    if (selectedFiles.length === 0) {
+      return;
+    }
+
+    setUploading(true);
+
+    const formData = new FormData();
+
+    selectedFiles.forEach((file) => {
+      formData.append("media", file);
+    });
+
+    try {
+      const res = await uploadMedia(formData);
+
+      onUploadSuccess(res.media);
+      handleClose();
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleClose = () => {
