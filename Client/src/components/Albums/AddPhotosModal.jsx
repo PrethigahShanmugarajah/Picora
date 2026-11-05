@@ -1,7 +1,8 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/set-state-in-effect */
 // Client / src / components / Albums / AddPhotosModal.jsx
 import { useEffect, useState } from "react";
-import { DUMMY_MEDIA } from "../../assets/assets";
+import { fetchPhotos } from "../../services/fetch";
+import { addPhotosToAlbum } from "../../services/mutations";
 import { CheckIcon, PlayIcon, XIcon } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
 
@@ -20,11 +21,23 @@ const AddPhotosModal = ({
   useEffect(() => {
     if (isOpen) {
       const fetchLibrary = async () => {
-        setAvailablePhotos(DUMMY_MEDIA);
+        setLoading(true);
+
+        try {
+          const res = await fetchPhotos();
+          const existingSet = new Set(existingPhotoIds);
+          const notInAlbum = (res.media || []).filter(
+            (p) => !existingSet.has(p._id),
+          );
+
+          setAvailablePhotos(notInAlbum);
+        } finally {
+          setLoading(false);
+        }
       };
 
       fetchLibrary();
-      // setSelectedIds([]);
+      setSelectedIds([]);
     }
   }, [isOpen, existingPhotoIds]);
 
@@ -39,7 +52,20 @@ const AddPhotosModal = ({
   };
 
   const handleAdd = async () => {
-    console.log(selectedIds);
+    if (selectedIds.length === 0) {
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const res = await addPhotosToAlbum(albumId, selectedIds);
+
+      onPhotosAdded(res.album);
+      onClose();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleClose = () => {
