@@ -5,7 +5,7 @@ import Auth from "./pages/Auth";
 import AppLayout from "./components/Layout/AppLayout";
 import Photos from "./pages/Photos";
 import Favorites from "./pages/Favorites";
-import Albums from "./pages/Albums/View/Albums";
+import Albums from "./pages/Albums";
 import AlbumDetail from "./pages/AlbumDetail/View/AlbumDetail";
 import Trash from "./pages/Trash/View/Trash";
 
