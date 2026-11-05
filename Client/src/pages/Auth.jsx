@@ -1,10 +1,10 @@
 // Client / src / pages / Auth.jsx
 import { useState } from "react";
-import { useAppContext } from "../../../context/appContext";
-import { Login_Ribbon, Logo } from "../../../assets/assets";
-import { InputField } from "../../../components/FormField/InputField";
+import { useAppContext } from "../context/appContext";
+import { Login_Ribbon, Logo } from "../assets/assets";
+import { InputField } from "../components/FormField/InputField";
 import { Eye, EyeOff } from "lucide-react";
-import { SingleCheckboxField } from "../../../components/FormField/CheckboxField";
+import { SingleCheckboxField } from "../components/FormField/CheckboxField";
 import { TailSpin } from "react-loader-spinner";
 
 // const Input = ({
