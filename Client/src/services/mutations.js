@@ -46,3 +46,73 @@ export const registerUser = async (payload) => {
     throw error;
   }
 };
+
+/* -------- Toggle Favorite -------- */
+export const toggleFavorite = async (id) => {
+  try {
+    const { data } = await api.patch(API_ROUTES.MEDIA.FAVORITE(id));
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Toggle Favorite Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to update favorite.");
+      console.error("Toggle Favorite Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Toggle Favorite Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Move to Trash -------- */
+export const moveToTrash = async (id) => {
+  try {
+    const { data } = await api.patch(API_ROUTES.MEDIA.TRASH(id), {
+      restore: false,
+    });
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Move to Trash Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to move media to trash.");
+      console.error("Move to Trash Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Move to Trash Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Upload Media -------- */
+export const uploadMedia = async (formData) => {
+  try {
+    const { data } = await api.post(API_ROUTES.MEDIA.UPLOAD, formData);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Upload Media Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to upload media.");
+      console.error("Upload Media Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Unable to upload media.",
+    );
+    console.error("Upload Media Error:", error);
+
+    throw error;
+  }
+};
