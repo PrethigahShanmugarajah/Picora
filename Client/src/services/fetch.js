@@ -115,3 +115,25 @@ export const fetchTrash = async () => {
     throw error;
   }
 };
+
+/* -------- Fetch Album -------- */
+export const fetchAlbum = async (id) => {
+  try {
+    const { data } = await api.get(`${API_ROUTES.ALBUM.BASE}/${id}`);
+
+    if (data?.success) {
+      // toast.success(data?.message);
+      console.log("Fetch Album Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to fetch album.");
+      console.error("Fetch Album Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Fetch Album Error:", error);
+
+    throw error;
+  }
+};
