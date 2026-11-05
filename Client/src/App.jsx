@@ -6,7 +6,7 @@ import AppLayout from "./components/Layout/AppLayout";
 import Photos from "./pages/Photos";
 import Favorites from "./pages/Favorites";
 import Albums from "./pages/Albums";
-import AlbumDetail from "./pages/AlbumDetail/View/AlbumDetail";
+import AlbumDetail from "./pages/AlbumDetail";
 import Trash from "./pages/Trash";
 
 const App = () => {
