@@ -14,6 +14,10 @@ const API_ROUTES = {
     TRASH: (id) => `/api/media/${id}/trash`,
     UPLOAD: "/api/media/upload",
   },
+
+  ALBUM: {
+    BASE: "/api/albums",
+  },
 };
 
 export default API_ROUTES;
