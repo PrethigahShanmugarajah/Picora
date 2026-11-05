@@ -7,7 +7,7 @@ import Photos from "./pages/Photos";
 import Favorites from "./pages/Favorites";
 import Albums from "./pages/Albums";
 import AlbumDetail from "./pages/AlbumDetail/View/AlbumDetail";
-import Trash from "./pages/Trash/View/Trash";
+import Trash from "./pages/Trash";
 
 const App = () => {
   return (
