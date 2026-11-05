@@ -1,13 +1,21 @@
-// Client / src / pages / AlbumDetail / View / AlbumDetail.jsx
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
+// Client / src / pages / AlbumDetail.jsx
 import { useParams } from "react-router-dom";
-import { useAppContext } from "../../../context/appContext";
+import { useAppContext } from "../context/appContext";
 import { useEffect, useState } from "react";
-import { DUMMY_ALBUM_DETAIL } from "../../../assets/assets";
+import { fetchAlbum } from "../services/fetch";
+import {
+  deleteAlbum,
+  removePhotoFromAlbum,
+  toggleFavorite,
+} from "../services/mutations";
 import { TailSpin } from "react-loader-spinner";
 import { ArrowLeft, Calendar, Plus, Trash2 } from "lucide-react";
-import PhotoGrid from "../../../components/Photos/PhotoGrid";
-import PhotoLightbox from "../../../components/Photos/PhotoLightbox";
-import AddPhotosModal from "../../../components/Albums/AddPhotosModal";
+import PhotoGrid from "../components/Photos/PhotoGrid";
+import PhotoLightbox from "../components/Photos/PhotoLightbox";
+import AddPhotosModal from "../components/Albums/AddPhotosModal";
+import ConfirmPopup from "../components/ConfirmPopup";
 
 const AlbumDetail = () => {
   const { id } = useParams();
@@ -19,37 +27,85 @@ const AlbumDetail = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [activePhoto, setActivePhoto] = useState(null);
   const [isAddPhotosModalOpen, setIsAddPhotosModalOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const fetchAlbum = async () => {
-    setTimeout(() => {
-      setAlbum(DUMMY_ALBUM_DETAIL);
+  const loadAlbum = async () => {
+    try {
+      const data = await fetchAlbum(id);
+      setAlbum(data.album);
+    } catch {
+      navigate("/albums");
+    } finally {
       setLoading(false);
-    }, 500);
+    }
   };
 
   useEffect(() => {
-    fetchAlbum();
+    loadAlbum();
   }, [id]);
 
   const handleRemoveFromAlbum = async (photoId) => {
-    console.log(photoId);
-  };
-
-  const toggleFavorite = async (photoId) => {
-    console.log(photoId);
-  };
-
-  const handleDeleteAlbum = async () => {
     if (!album) {
       return;
     }
 
-    if (
-      !window.confirm(
-        "Are you sure want to delete this album? Photos inside will remain safe in your library.",
-      )
-    ) {
+    try {
+      await removePhotoFromAlbum(album._id, photoId);
+
+      setAlbum((prev) =>
+        prev
+          ? { ...prev, photos: prev.photos.filter((p) => p._id !== photoId) }
+          : prev,
+      );
+
+      setSelectedIds((prev) => prev.filter((i) => i !== photoId));
+
+      if (activePhoto?._id === photoId) {
+        setActivePhoto(null);
+      }
+    } catch {
+      //
+    }
+  };
+
+  const updateFavorite = async (photoId) => {
+    try {
+      const res = await toggleFavorite(photoId);
+      const updated = res.media;
+
+      setAlbum((prev) =>
+        prev
+          ? {
+              ...prev,
+              photos: prev.photos.map((p) =>
+                p._id !== photoId
+                  ? { ...p, isFavorite: updated.isFavorite }
+                  : p,
+              ),
+            }
+          : prev,
+      );
+    } catch {
+      //
+    }
+  };
+
+  const handleDeleteAlbum = () => {
+    if (!album) {
       return;
+    }
+
+    setIsDeletePopupOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      setDeleteLoading(true);
+      await deleteAlbum(album._id);
+      navigate("/albums");
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -139,7 +195,7 @@ const AlbumDetail = () => {
                 : [...prev, photoId],
             )
           }
-          onToggleFavorite={toggleFavorite}
+          onToggleFavorite={updateFavorite}
           onSelectPhoto={(photo) => setActivePhoto(photo)}
           onRemoveFromAlbum={handleRemoveFromAlbum}
         />
@@ -163,7 +219,7 @@ const AlbumDetail = () => {
         photos={album.photos || []}
         currentPhoto={activePhoto}
         onClose={() => setActivePhoto(null)}
-        onToggleFavorite={toggleFavorite}
+        onToggleFavorite={updateFavorite}
         onTrashPhoto={(photoId) => handleRemoveFromAlbum(photoId)}
       />
 
@@ -177,6 +233,24 @@ const AlbumDetail = () => {
           setAlbum(updatedAlbum);
         }}
       />
+
+      {isDeletePopupOpen && (
+        <ConfirmPopup
+          title="Delete Album"
+          description={
+            <>
+              Are you sure you want to delete the album{" "}
+              <strong>{album.title}</strong>? Photos inside will remain safe in
+              your library.
+            </>
+          }
+          confirmText="Delete"
+          closeText="Cancel"
+          loading={deleteLoading}
+          onClose={() => setIsDeletePopupOpen(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };
