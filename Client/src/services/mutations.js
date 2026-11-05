@@ -206,3 +206,56 @@ export const deleteMediaPermanent = async (id) => {
     throw error;
   }
 };
+
+/* -------- Remove Photo From Album -------- */
+export const removePhotoFromAlbum = async (albumId, photoId) => {
+  try {
+    const { data } = await api.delete(
+      `${API_ROUTES.ALBUM.BASE}/${albumId}/photos/${photoId}`,
+    );
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Remove Photo From Album Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to remove photo from album.");
+      console.error("Remove Photo From Album Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Unable to remove photo from album.",
+    );
+    console.error("Remove Photo From Album Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Add Photos To Album -------- */
+export const addPhotosToAlbum = async (albumId, photoIds) => {
+  try {
+    const { data } = await api.post(
+      `${API_ROUTES.ALBUM.BASE}/${albumId}/photos`,
+      { photoIds },
+    );
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Add Photos To Album Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to add photos to album.");
+      console.error("Add Photos To Album Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Unable to add photos to album.",
+    );
+    console.error("Add Photos To Album Error:", error);
+
+    throw error;
+  }
+};
