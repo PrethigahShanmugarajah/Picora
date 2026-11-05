@@ -1,7 +1,7 @@
 // Client / src / App.jsx
 import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Auth from "./pages/Auth/View/Auth";
+import Auth from "./pages/Auth";
 import AppLayout from "./components/Layout/AppLayout";
 import Photos from "./pages/Photos/View/Photos";
 import Favorites from "./pages/Favorites/View/Favorites";
