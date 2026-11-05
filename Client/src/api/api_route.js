@@ -6,6 +6,10 @@ const API_ROUTES = {
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
   },
+  
+  MEDIA: {
+    STATS: "/api/media/stats",
+  },
 };
 
 export default API_ROUTES;
