@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 // Client / src / components / Albums / CreateAlbumModal.jsx
 import { useState } from "react";
+import { createAlbum } from "../../services/mutations";
 import { FolderPlusIcon, XIcon } from "lucide-react";
 import { InputField } from "../FormField/InputField";
 import { TextAreaField } from "../FormField/TextAreaField";
@@ -22,6 +22,23 @@ const CreateAlbumModal = ({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
+
+    try {
+      const res = await createAlbum({
+        title: title.trim(),
+        description: description.trim(),
+        photoIds: initialPhotoIds,
+      });
+
+      onAlbumCreated(res.album);
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -96,7 +113,6 @@ const CreateAlbumModal = ({
               size="xs"
               value={description}
               onChange={(value) => setDescription(value)}
-              required
             />
           </div>
 
@@ -118,8 +134,7 @@ const CreateAlbumModal = ({
             </button>
 
             <button
-              type="button"
-              onClick={handleClose}
+              type="submit"
               className="flex items-center gap-2 px-6 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 text-white text-sm font-semibold rounded-full transition cursor-pointer"
               disabled={loading || !title.trim()}
             >
