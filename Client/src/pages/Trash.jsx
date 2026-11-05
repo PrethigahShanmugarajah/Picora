@@ -1,36 +1,78 @@
-// Client / src / pages / Trash / View / Trash.jsx
+// Client / src / pages / Trash.jsx
 import { useEffect, useState } from "react";
-import { DUMMY_MEDIA } from "../../../assets/assets";
-import PageHeader from "../../../components/PageHeader";
+import { fetchTrash } from "../services/fetch";
+import {
+  deleteMediaPermanent,
+  emptyTrash,
+  updateMediaTrash,
+} from "../services/mutations";
+import PageHeader from "../components/PageHeader";
 import { MopIcon, PlayIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
+import ConfirmPopup from "../components/ConfirmPopup";
 
 const Trash = () => {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const fetchTrash = async () => {
-    setTimeout(() => {
-      // setPhotos([]);
-      setPhotos(DUMMY_MEDIA);
+  const loadTrash = async () => {
+    try {
+      const data = await fetchTrash();
+      setPhotos(data.media || []);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
-    fetchTrash();
+    loadTrash();
   }, []);
 
-  const handleEmptyTrash = async () => {
-    console.log("Handle Empty Trash");
+  const handleEmptyTrash = () => {
+    if (photos.length === 0) {
+      return;
+    }
+
+    setConfirmAction({ type: "empty" });
   };
 
   const handleRestore = async (id) => {
-    console.log(id);
+    try {
+      await updateMediaTrash(id, true);
+      setPhotos((prev) => prev.filter((p) => p._id !== id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDeletePermanent = async (id) => {
-    console.log(id);
+  const handleDeletePermanent = (id) => {
+    setConfirmAction({ type: "delete", id });
+  };
+
+  const handleConfirm = async () => {
+    if (!confirmAction) {
+      return;
+    }
+
+    setConfirmLoading(true);
+
+    try {
+      if (confirmAction.type === "empty") {
+        await emptyTrash();
+        setPhotos([]);
+      } else if (confirmAction.type === "delete") {
+        await deleteMediaPermanent(confirmAction.id);
+        setPhotos((prev) => prev.filter((p) => p._id !== confirmAction.id));
+      }
+
+      setConfirmAction(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setConfirmLoading(false);
+    }
   };
 
   return (
@@ -142,6 +184,33 @@ const Trash = () => {
             );
           })}
         </div>
+      )}
+
+      {confirmAction && (
+        <ConfirmPopup
+          title={
+            confirmAction.type === "empty"
+              ? "Clear Trash?"
+              : "Delete Permanently?"
+          }
+          description={
+            confirmAction.type === "empty" ? (
+              <>
+                Are you sure you want to permanently delete all{" "}
+                <strong>{photos.length}</strong> items in trash? This cannot be
+                undone.
+              </>
+            ) : (
+              "Are you sure you want to permanently delete this item? This cannot be undone."
+            )
+          }
+          confirmText={
+            confirmAction.type === "empty" ? "Clear Trash" : "Delete"
+          }
+          loading={confirmLoading}
+          onClose={() => setConfirmAction(null)}
+          onConfirm={handleConfirm}
+        />
       )}
     </div>
   );
