@@ -1,31 +1,39 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 // Client / src / components / Layout / AppLayout.jsx
 import { useAppContext } from "../../context/appContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { TailSpin } from "react-loader-spinner";
+import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
-import { Outlet } from "react-router-dom";
 import CreateAlbumModal from "../Albums/CreateAlbumModal";
 import UploadModal from "../Photos/UploadModal";
 
 const AppLayout = () => {
-  const { navigate, location } = useAppContext();
+  const { navigate, location, token, loading } = useAppContext();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [previousPathname, setPreviousPathname] = useState(location.pathname);
   const [createAlbumState, setCreateAlbumState] = useState({
     isOpen: false,
     photoIds: [],
   });
 
-  // useEffect(() => {
-  //   setIsMobileSidebarOpen(false);
-  // }, [location.pathname]);
-
-  if (location.pathname !== previousPathname) {
-    setPreviousPathname(location.pathname);
+  useEffect(() => {
     setIsMobileSidebarOpen(false);
+  }, [location.pathname]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <TailSpin height={40} width={40} color="#0891B2" ariaLabel="loading" />
+      </div>
+    );
+  }
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
   const handleUploadSuccess = () => {
