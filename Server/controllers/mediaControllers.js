@@ -3,6 +3,7 @@ import { imagekit, toFile } from "../config/imageKit.js";
 import { imagekitUrlEndpoint } from "../config/env.js";
 import Media from "../models/Media.js";
 import Album from "../models/Album.js";
+import mongoose from "mongoose";
 
 /* -------- Upload Media -------- */
 export const uploadMedia = async (req, res) => {
