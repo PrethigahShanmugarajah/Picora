@@ -1,4 +1,3 @@
-// Client / src / components / Photos / BulkSelectionBar.jsx
 import {
   CheckSquareIcon,
   FolderPlusIcon,

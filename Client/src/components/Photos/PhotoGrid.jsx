@@ -1,4 +1,3 @@
-// Client / src / components / Photos / PhotoGrid.jsx
 import { useMemo } from "react";
 import { CheckCircle2Icon } from "lucide-react";
 import PhotoCard from "./PhotoCard";
@@ -14,7 +13,6 @@ const PhotoGrid = ({
   const grouped = useMemo(() => {
     const groups = {};
     const today = new Date().toDateString();
-    // const yesterday = new Date(Date.now() - 86400000).toDateString();
     const yesterdayDate = new Date();
     yesterdayDate.setDate(yesterdayDate.getDate() - 1);
     const yesterday = yesterdayDate.toDateString();

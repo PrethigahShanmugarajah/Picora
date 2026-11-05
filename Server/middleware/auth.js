@@ -1,4 +1,3 @@
-// Server / middleware / auth.js
 import jwt from "jsonwebtoken";
 import { jwtSecret } from "../config/env.js";
 
@@ -50,7 +49,6 @@ export const requireAuth = (req, res, next) => {
       success: false,
       message:
         "An unexpected error occurred while verifying your authentication.",
-      error: `Authentication Middleware Error: ${error?.stack || error?.message || error}`,
     });
   }
 };

@@ -1,8 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-hooks/immutability */
-/* eslint-disable react-hooks/set-state-in-effect */
-// Client / src / components / Photos / PhotoLightbox.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   X,
   ChevronLeftIcon,
@@ -33,36 +29,50 @@ const PhotoLightbox = ({
   const [showInfo, setShowInfo] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(-1);
 
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
+  }, [photos.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
+  }, [photos.length]);
+
   useEffect(() => {
     if (currentPhoto) {
-      const idx = photos.findIndex((p) => p._id === currentPhoto._id);
-      setCurrentIndex(idx >= 0 ? idx : 0);
+      const timeout = setTimeout(() => {
+        const idx = photos.findIndex((p) => p._id === currentPhoto._id);
+        setCurrentIndex(idx >= 0 ? idx : 0);
+      }, 0);
+
+      return () => clearTimeout(timeout);
     }
   }, [currentPhoto, photos]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "Escape") {
+        onClose();
+      }
+
+      if (e.key === "ArrowLeft") {
+        handlePrev();
+      }
+
+      if (e.key === "ArrowRight") {
+        handleNext();
+      }
     };
+
     window.addEventListener("keydown", handleKeyDown);
+
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentIndex, photos]);
+  }, [handlePrev, handleNext, onClose]);
 
   if (!currentPhoto || currentIndex < 0 || !photos[currentIndex]) {
     return null;
   }
 
   const activePhoto = photos[currentIndex];
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
-  };
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -126,7 +136,7 @@ const PhotoLightbox = ({
           {onAddToAlbum && (
             <button
               onClick={() => onAddToAlbum(activePhoto)}
-              className="lightbox-btn"
+              className="p-2.5 hover:bg-white/20 rounded-full transition cursor-pointer text-white"
               title="Add to Album"
             >
               <FolderPlus className="size-5" />
@@ -135,7 +145,7 @@ const PhotoLightbox = ({
 
           <button
             onClick={handleDownload}
-            className="lightbox-btn"
+            className="p-2.5 hover:bg-white/20 rounded-full transition cursor-pointer text-white"
             title="Download"
           >
             <Download className="size-5" />
@@ -152,15 +162,8 @@ const PhotoLightbox = ({
           </button>
 
           <button
-            onClick={() => {
-              onTrashPhoto(activePhoto._id);
-              if (photos.length > 1) {
-                handleNext();
-              } else {
-                onClose();
-              }
-            }}
-            className="lightbox-btn hover:bg-rose-500/80!"
+            onClick={() => onTrashPhoto(activePhoto._id)}
+            className="p-2.5 hover:bg-white/20 rounded-full transition cursor-pointer text-white"
             title="Move to trash"
           >
             <Trash2 className="size-5" />
@@ -194,7 +197,7 @@ const PhotoLightbox = ({
             >
               <Video
                 urlEndpoint={urlEndpoint}
-                src={activePhoto.url} 
+                src={activePhoto.url}
                 poster={activePhoto.thumbnailUrl || undefined}
                 controls={true}
                 autoPlay={true}

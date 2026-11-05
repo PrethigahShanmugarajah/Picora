@@ -1,4 +1,3 @@
-// Client / src / App.jsx
 import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";

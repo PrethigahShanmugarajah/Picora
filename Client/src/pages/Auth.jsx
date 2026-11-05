@@ -1,4 +1,3 @@
-// Client / src / pages / Auth.jsx
 import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { Login_Ribbon, Logo } from "../assets/assets";
@@ -7,34 +6,10 @@ import { Eye, EyeOff } from "lucide-react";
 import { SingleCheckboxField } from "../components/FormField/CheckboxField";
 import { TailSpin } from "react-loader-spinner";
 
-// const Input = ({
-//   label,
-//   value,
-//   placeholder,
-//   type = "text",
-//   onChange,
-//   required = true,
-// }) => (
-//   <div>
-//     <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-//       {label}
-//     </label>
-
-//     <input
-//       type={type}
-//       value={value}
-//       onChange={(e) => onChange(e.target.value)}
-//       placeholder={placeholder}
-//       required={required}
-//       className="auth-input"
-//     />
-//   </div>
-// );
-
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -42,7 +17,7 @@ const Auth = () => {
     rememberMe: true,
   });
 
-  const { navigate, loading, setLoading, login, register } = useAppContext();
+  const { navigate, login, register } = useAppContext();
 
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -113,14 +88,6 @@ const Auth = () => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              // <Input
-              //   key="name"
-              //   label="Full Name"
-              //   value={form.name}
-              //   placeholder="Enter your name"
-              //   onChange={(v) => update("name", v)}
-              // />
-
               <InputField
                 name="name"
                 label="Full Name"
@@ -132,14 +99,6 @@ const Auth = () => {
               />
             )}
 
-            {/* <Input
-              key="email"
-              label="Email"
-              value={form.email}
-              placeholder="Enter your email"
-              onChange={(v) => update("email", v)}
-            /> */}
-
             <InputField
               name="email"
               label="Email"
@@ -149,35 +108,6 @@ const Auth = () => {
               size="s"
               onChange={(e) => update("email", e.target.value)}
             />
-
-            {/* <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1.5">
-                Password
-              </label>
-
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={form.password}
-                  onChange={(e) => update("password", e.target.value)}
-                  placeholder="********"
-                  required
-                  className="auth-input pr-11"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600 transition cursor-pointer"
-                >
-                  {showPassword ? (
-                    <EyeOff className="size-4" />
-                  ) : (
-                    <Eye className="size-4" />
-                  )}
-                </button>
-              </div>
-            </div> */}
 
             <InputField
               name="password"
@@ -202,17 +132,6 @@ const Auth = () => {
             />
 
             <div className="flex items-center justify-between text-xs pt-0.5">
-              {/* <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={form.rememberMe}
-                  onChange={(e) => update("rememberMe", e.target.checked)}
-                  className="size-4 rounded border-slate-300 accent-slate-900"
-                />
-
-                <span className="text-slate-600">Remember Me</span>
-              </label> */}
-
               <SingleCheckboxField
                 name="rememberMe"
                 label="Remember Me"
@@ -222,19 +141,12 @@ const Auth = () => {
                 labelPosition="right"
                 labelClassName="text-slate-600"
               />
-
-              <button
-                type="button"
-                className="text-slate-700 hover:text-slate-950 hover:underline transition cursor-pointer"
-              >
-                Forgot Password
-              </button>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="auth-btn-primary"
+              className="w-full mt-2 py-3.5 bg-black hover:bg-neutral-800 disabled:opacity-50 text-white rounded-xl text-sm font-semibold transition cursor-pointer flex items-center justify-center gap-2"
             >
               {loading ? (
                 <TailSpin

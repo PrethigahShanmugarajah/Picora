@@ -1,5 +1,3 @@
-// Client / src / components / PageHeader.jsx
-
 const PageHeader = ({ icon: Icon, title, count, description }) => {
   return (
     <div>

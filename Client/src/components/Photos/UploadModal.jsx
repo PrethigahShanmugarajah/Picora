@@ -1,4 +1,3 @@
-// Client / src / components / Photos / UploadModal.jsx
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadMedia } from "../../services/mutations";

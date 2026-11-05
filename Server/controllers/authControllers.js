@@ -1,4 +1,3 @@
-// Server / controllers / authControllers.js
 import { validatePassword } from "../utils/passwordValidator.js";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
@@ -100,7 +99,6 @@ export const registerUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while creating your account.",
-      error: `Register User Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -185,7 +183,6 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while logging in.",
-      error: `Login User Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -216,7 +213,6 @@ export const getMe = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while retrieving your profile.",
-      error: `Get Current User Error: ${error?.stack || error?.message || error}`,
     });
   }
 };

@@ -1,4 +1,3 @@
-// Client / src / components / Photos / PhotoCard.jsx
 import { useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import { CheckIcon, PlayIcon, StarIcon, XIcon } from "lucide-react";

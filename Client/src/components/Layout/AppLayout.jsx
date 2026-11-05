@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-// Client / src / components / Layout / AppLayout.jsx
 import { useAppContext } from "../../context/appContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TailSpin } from "react-loader-spinner";
 import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -14,15 +12,19 @@ const AppLayout = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [mobileSidebarState, setMobileSidebarState] = useState({
+    pathname: location.pathname,
+    isOpen: false,
+  });
+
+  const isMobileSidebarOpen =
+    mobileSidebarState.pathname === location.pathname &&
+    mobileSidebarState.isOpen;
+
   const [createAlbumState, setCreateAlbumState] = useState({
     isOpen: false,
     photoIds: [],
   });
-
-  useEffect(() => {
-    setIsMobileSidebarOpen(false);
-  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -55,7 +57,12 @@ const AppLayout = () => {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onUploadClick={() => setIsUploadOpen(true)}
-        onToggleSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}
+        onToggleSidebar={() =>
+          setMobileSidebarState((prev) => ({
+            pathname: location.pathname,
+            isOpen: !(prev.pathname === location.pathname && prev.isOpen),
+          }))
+        }
       />
 
       <div className="flex-1 flex overflow-hidden min-h-0 relative">
@@ -63,7 +70,12 @@ const AppLayout = () => {
           onCreateAlbumClick={() => openCreateAlbum()}
           onUploadClick={() => setIsUploadOpen(true)}
           isMobileOpen={isMobileSidebarOpen}
-          onCloseMobile={() => setIsMobileSidebarOpen(false)}
+          onCloseMobile={() =>
+            setMobileSidebarState({
+              pathname: location.pathname,
+              isOpen: false,
+            })
+          }
         />
 
         <main className="flex-1 overflow-y-auto min-h-0 p-4 sm:p-6 md:p-8 bg-slate-50/50">

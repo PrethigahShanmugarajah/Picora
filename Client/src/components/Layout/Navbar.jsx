@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// Client / src / components / Layout / Navbar.jsx
 import { useEffect, useRef, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import {
@@ -42,6 +40,7 @@ const Navbar = ({
       {/* -------- Left Side - Mobile Hamburger -------- */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <button
+          onClick={onToggleSidebar}
           className="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition cursor-pointer shrink-0"
           title="Toggle Menu"
           aria-label="Toggle Navigation Menu"

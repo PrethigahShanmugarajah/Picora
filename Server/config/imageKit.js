@@ -1,4 +1,3 @@
-// Server / config / imageKit.js
 import ImageKit, { toFile } from "@imagekit/nodejs";
 import { imagekitPrivateKey } from "./env.js";
 

@@ -1,5 +1,3 @@
-// Client / src / api / api_route.js
-
 const API_ROUTES = {
   AUTH: {
     ME: "/api/auth/me",

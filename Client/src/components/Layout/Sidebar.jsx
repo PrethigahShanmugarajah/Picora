@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-// Client / src / components / Layout / Sidebar.jsx
 import { useEffect, useState } from "react";
 import { fetchStats } from "../../services/fetch";
 import {
@@ -32,11 +30,13 @@ const Sidebar = ({
   };
 
   useEffect(() => {
-    loadStats();
-
+    const timeout = setTimeout(loadStats, 0);
     const interval = setInterval(loadStats, 15000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, []);
 
   const storageUsed = stats?.totalBytes
@@ -78,7 +78,7 @@ const Sidebar = ({
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-white border-r border-slate-200 p-4 flex flex-col sm:justify-between gap-6 select-none md:static md:w-64 md:h-full md:bg-slate-50/70 md:translate-x-0 transition-transform duration-200 ease-in-out shrink-0 overflow-y-auto ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-white border-r border-slate-200 p-4 flex flex-col justify-start gap-6 select-none md:justify-between md:static md:w-64 md:h-full md:bg-slate-50/70 md:translate-x-0 transition-transform duration-200 ease-in-out shrink-0 overflow-y-auto ${
           isMobileOpen
             ? "translate-x-0 shadow-2xl md:shadow-none"
             : "-translate-x-full md:translate-x-0"
@@ -150,7 +150,7 @@ const Sidebar = ({
         </div>
 
         {/* -------- Storage Widget -------- */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/80 space-y-3">
+        <div className="mt-auto bg-white rounded-2xl p-4 border border-slate-200/80 space-y-3">
           <div className="flex items-center justify-between text-xs text-slate-600">
             <span className="flex items-center gap-1.5 text-slate-700">
               <HardDriveIcon className="size-4 text-cyan-500" />

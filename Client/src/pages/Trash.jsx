@@ -1,4 +1,3 @@
-// Client / src / pages / Trash.jsx
 import { useEffect, useState } from "react";
 import { fetchTrash } from "../services/fetch";
 import {

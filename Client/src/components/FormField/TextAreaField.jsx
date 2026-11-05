@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// Client / src / components / FormField / TextAreaField.jsx
 import { useEffect, useMemo, useState } from "react";
 
 const SIZE_CONFIG = {
@@ -13,6 +11,8 @@ const SIZE_CONFIG = {
   xxl: { fontSize: 18, px: "22px", py: "16px", radius: "24px" },
   xxxl: { fontSize: 20, px: "24px", py: "18px", radius: "26px" },
 };
+
+const BP_MIN = { base: 0, sm: 640, md: 768, lg: 1024, xl: 1280, "2xl": 1536 };
 
 const getSize = (sizeKey) => {
   if (!sizeKey || !SIZE_CONFIG[sizeKey]) {
@@ -43,8 +43,6 @@ export const TextAreaField = ({
   iconRight,
   ...rest
 }) => {
-  const BP_MIN = { base: 0, sm: 640, md: 768, lg: 1024, xl: 1280, "2xl": 1536 };
-
   const rules = useMemo(() => {
     if (!size) return [{ bp: "base", value: "m" }];
 

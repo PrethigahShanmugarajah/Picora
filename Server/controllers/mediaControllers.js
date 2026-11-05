@@ -1,6 +1,5 @@
-// Server / controllers / mediaControllers.js
 import { imagekit, toFile } from "../config/imageKit.js";
-import { imagekitUrlEndpoint } from "../config/env.js";
+import { imagekitUrlEndpoint, projectName } from "../config/env.js";
 import Media from "../models/Media.js";
 import Album from "../models/Album.js";
 import mongoose from "mongoose";
@@ -36,7 +35,7 @@ export const uploadMedia = async (req, res) => {
       const uploadParams = {
         file: fileObj,
         fileName: `${Date.now()}-${file.originalname}`,
-        folder: isVideo ? "/my-videos" : "/my-photos",
+        folder: isVideo ? `/${projectName}/Videos` : `/${projectName}/Photos`,
         useUniqueFileName: true,
         responseFields: ["tags"],
       };
@@ -106,7 +105,6 @@ export const uploadMedia = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while uploading your media.",
-      error: `Upload Media Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -170,7 +168,6 @@ export const getMedia = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while retrieving your media.",
-      error: `Get Media Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -217,7 +214,6 @@ export const getTrash = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while retrieving your trash.",
-      error: `Get Trash Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -271,7 +267,6 @@ export const emptyTrash = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while emptying your trash.",
-      error: `Empty Trash Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -313,7 +308,6 @@ export const getStorageStats = async (req, res) => {
       success: false,
       message:
         "An unexpected error occurred while retrieving storage statistics.",
-      error: `Get Storage Stats Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -359,7 +353,6 @@ export const toggleFavorite = async (req, res) => {
       success: false,
       message:
         "An unexpected error occurred while updating the favorite status.",
-      error: `Toggle Favorite Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -426,7 +419,6 @@ export const toggleTrash = async (req, res) => {
       success: false,
       message:
         "An unexpected error occurred while updating the media trash status.",
-      error: `Toggle Trash Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -492,7 +484,6 @@ export const deleteMediaPermanent = async (req, res) => {
       success: false,
       message:
         "An unexpected error occurred while permanently deleting your media.",
-      error: `Delete Media Permanently Error: ${error?.stack || error?.message || error}`,
     });
   }
 };

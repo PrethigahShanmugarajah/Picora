@@ -85,13 +85,18 @@ const Photos = () => {
     try {
       await updateMediaTrash(id);
 
+      // setPhotos((prev) => prev.filter((p) => p._id !== id));
+      const deletedIndex = photos.findIndex((p) => p._id === id);
+      const nextPhoto =
+        photos[deletedIndex + 1] || photos[deletedIndex - 1] || null;
+
+      if (activePhoto?._id === id) {
+        setActivePhoto(nextPhoto);
+      }
+
       setPhotos((prev) => prev.filter((p) => p._id !== id));
 
       setSelectedIds((prev) => prev.filter((i) => i !== id));
-
-      if (activePhoto && activePhoto._id === id) {
-        setActivePhoto(null);
-      }
     } catch (error) {
       console.error(error);
     }
@@ -128,21 +133,6 @@ const Photos = () => {
       {/* -------- Header Information -------- */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/60">
         {/* -------- Left -------- */}
-        {/* <div>
-          <h2 className="text-2xl font-medium text-slate-900 tracking-tight flex items-center gap-2">
-            Photos & Videos{" "}
-            {photos.length > 0 && (
-              <span className="text-sm font-semibold text-slate-400 bg-slate-100 px-2.5 py-0.5 rounded-full">
-                {photos.length}
-              </span>
-            )}
-          </h2>
-
-          <p className="text-xs text-slate-500 mt-0.5">
-            All your preserved photos and videos, automatically organized by
-            date
-          </p>
-        </div> */}
 
         <PageHeader
           icon={ImageIcon}
@@ -203,7 +193,7 @@ const Photos = () => {
           />
         </div>
       ) : photos.length === 0 ? (
-        <div className="empty-state-card">
+        <div className="text-center py-20 px-4 xl:mt-40 bg-white rounded-3xl border border-slate-200/80 max-w-lg mx-auto">
           <h3 className="text-lg font-medium text-slate-800">
             {searchQuery ? "No Matching Media" : "Your media library is empty"}
           </h3>

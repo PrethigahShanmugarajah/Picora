@@ -1,4 +1,3 @@
-// Client / src / components / Albums / CreateAlbumModal.jsx
 import { useState } from "react";
 import { createAlbum } from "../../services/mutations";
 import { FolderPlusIcon, XIcon } from "lucide-react";

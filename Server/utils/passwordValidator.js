@@ -1,5 +1,3 @@
-// Server / utils / passwordValidator.js
-
 /* -------- Validate Password -------- */
 export const validatePassword = (password) => {
   if (typeof password !== "string") {

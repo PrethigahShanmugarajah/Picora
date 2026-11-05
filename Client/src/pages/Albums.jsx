@@ -1,4 +1,3 @@
-// Client / src / pages / Albums.jsx
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
@@ -56,21 +55,6 @@ const Albums = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between pb-2 border-b border-slate-200/60">
-        {/* <div>
-          <h2 className="text-2xl font-medium text-slate-900 tracking-tight flex items-center gap-2">
-            <FolderHeartIcon className="size-6 text-red-600" /> Albums
-            {albums.length > 0 && (
-              <span className="text-sm font-medium text-slate-400 bg-slate-100 px-2.5 py-0.5 rounded-full">
-                {albums.length}
-              </span>
-            )}
-          </h2>
-
-          <p className="text-xs text-slate-500 mt-0.5">
-            Group your photos into beautiful stories
-          </p>
-        </div> */}
-
         <PageHeader
           icon={FolderHeartIcon}
           title="Albums"

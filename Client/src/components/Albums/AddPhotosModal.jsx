@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-// Client / src / components / Albums / AddPhotosModal.jsx
 import { useEffect, useState } from "react";
 import { fetchPhotos } from "../../services/fetch";
 import { addPhotosToAlbum } from "../../services/mutations";
@@ -37,7 +35,6 @@ const AddPhotosModal = ({
       };
 
       fetchLibrary();
-      setSelectedIds([]);
     }
   }, [isOpen, existingPhotoIds]);
 
@@ -62,7 +59,7 @@ const AddPhotosModal = ({
       const res = await addPhotosToAlbum(albumId, selectedIds);
 
       onPhotosAdded(res.album);
-      onClose();
+      handleClose();
     } finally {
       setSubmitting(false);
     }
@@ -85,7 +82,6 @@ const AddPhotosModal = ({
           </div>
 
           <button
-            // onClick={onClose}
             onClick={handleClose}
             className="p-1.5 hover:bg-slate-100 text-slate-400 hover:text-slate-600 rounded-full transition cursor-pointer"
           >
@@ -169,7 +165,7 @@ const AddPhotosModal = ({
 
           <div className="flex items-center gap-2">
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="px-4 py-2 text-sm text-slate-600 hover:bg-slate-200/60 rounded-full font-medium transition cursor-pointer"
             >
               Cancel

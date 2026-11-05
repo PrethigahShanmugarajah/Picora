@@ -1,4 +1,3 @@
-// Client / src / components / ConfirmPopup.jsx
 import { X } from "lucide-react";
 import { TailSpin } from "react-loader-spinner";
 

@@ -1,4 +1,3 @@
-// Client / src / context / AppContext.jsx
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchUser } from "../services/fetch";

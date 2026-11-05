@@ -1,9 +1,6 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable react-hooks/exhaustive-deps */
-// Client / src / pages / AlbumDetail.jsx
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchAlbum } from "../services/fetch";
 import {
   deleteAlbum,
@@ -30,7 +27,7 @@ const AlbumDetail = () => {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const loadAlbum = async () => {
+  const loadAlbum = useCallback(async () => {
     try {
       const data = await fetchAlbum(id);
       setAlbum(data.album);
@@ -39,11 +36,13 @@ const AlbumDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
 
   useEffect(() => {
-    loadAlbum();
-  }, [id]);
+    const timeout = setTimeout(loadAlbum, 0);
+
+    return () => clearTimeout(timeout);
+  }, [loadAlbum]);
 
   const handleRemoveFromAlbum = async (photoId) => {
     if (!album) {

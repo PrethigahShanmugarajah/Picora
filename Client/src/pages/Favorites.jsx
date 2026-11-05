@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// Client / src / pages / Favorites.jsx
 import { useOutletContext } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fetchPhotos } from "../services/fetch";
 import { updateMediaTrash, toggleFavorite } from "../services/mutations";
 import PageHeader from "../components/PageHeader";
@@ -18,7 +16,7 @@ const Favorites = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [activePhoto, setActivePhoto] = useState(null);
 
-  const fetchFavorites = async () => {
+  const fetchFavorites = useCallback(async () => {
     try {
       const data = await fetchPhotos({
         favorite: true,
@@ -29,11 +27,11 @@ const Favorites = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery]);
 
   useEffect(() => {
     fetchFavorites();
-  }, [searchQuery]);
+  }, [fetchFavorites]);
 
   const toggleSelect = (id) => {
     setSelectedIds((prev) =>
@@ -105,7 +103,7 @@ const Favorites = () => {
           />
         </div>
       ) : photos.length === 0 ? (
-        <div className="empty-state-card">
+        <div className="text-center py-20 px-4 xl:mt-40 bg-white rounded-3xl border border-slate-200/80 max-w-lg mx-auto">
           <h3 className="text-lg font-medium text-slate-800">
             No favorites yet
           </h3>
@@ -120,7 +118,7 @@ const Favorites = () => {
           photos={photos}
           selectedIds={selectedIds}
           onToggleSelect={toggleSelect}
-          onSelectPhoto={() => setActivePhoto(photos)}
+          onSelectPhoto={(photo) => setActivePhoto(photo)}
           onToggleFavorite={updateFavorite}
         />
       )}

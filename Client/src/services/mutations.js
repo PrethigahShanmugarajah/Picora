@@ -1,4 +1,3 @@
-// Client / src / services / mutations.js
 import api from "../api/axios";
 import API_ROUTES from "../api/api_route";
 import toast from "react-hot-toast";
@@ -10,7 +9,6 @@ export const loginUser = async (payload) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Login User Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to login.");
       console.error("Login User Error:", data?.message);
@@ -32,7 +30,6 @@ export const registerUser = async (payload) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Register User Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to create your account.");
       console.error("Register User Error:", data?.message);
@@ -54,7 +51,6 @@ export const toggleFavorite = async (id) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Toggle Favorite Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to update favorite.");
       console.error("Toggle Favorite Error:", data?.message);
@@ -78,7 +74,6 @@ export const updateMediaTrash = async (id, restore = false) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Update Media Trash Status Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to update media trash status.");
       console.error("Update Media Trash Status Error:", data?.message);
@@ -102,7 +97,6 @@ export const uploadMedia = async (formData) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Upload Media Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to upload media.");
       console.error("Upload Media Error:", data?.message);
@@ -124,7 +118,6 @@ export const createAlbum = async (payload) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Create Album Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to create album.");
       console.error("Create Album Error:", data?.message);
@@ -146,7 +139,6 @@ export const deleteAlbum = async (id) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Delete Album Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to delete album.");
       console.error("Delete Album Error:", data?.message);
@@ -168,7 +160,6 @@ export const emptyTrash = async () => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Empty Trash Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to empty trash.");
       console.error("Empty Trash Error:", data?.message);
@@ -190,7 +181,6 @@ export const deleteMediaPermanent = async (id) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Permanently Delete Media Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to permanently delete media.");
       console.error("Permanently Delete Media Error:", data?.message);
@@ -216,7 +206,6 @@ export const removePhotoFromAlbum = async (albumId, photoId) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Remove Photo From Album Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to remove photo from album.");
       console.error("Remove Photo From Album Error:", data?.message);
@@ -243,7 +232,6 @@ export const addPhotosToAlbum = async (albumId, photoIds) => {
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Add Photos To Album Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to add photos to album.");
       console.error("Add Photos To Album Error:", data?.message);

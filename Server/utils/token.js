@@ -1,4 +1,3 @@
-// Server / utils / token.js
 import jwt from "jsonwebtoken";
 import { jwtExpiresIn, jwtSecret } from "../config/env.js";
 

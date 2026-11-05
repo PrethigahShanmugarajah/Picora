@@ -1,4 +1,3 @@
-// Server / controllers / albumControllers.js
 import Album from "../models/Album.js";
 import mongoose from "mongoose";
 import Media from "../models/Media.js";
@@ -113,7 +112,6 @@ export const createAlbum = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while creating the album.",
-      error: `Create Album Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -150,7 +148,6 @@ export const getMyAlbums = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while retrieving your albums.",
-      error: `Get My Albums Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -197,7 +194,6 @@ export const getAlbumById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while retrieving the album.",
-      error: `Get Album By ID Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -239,7 +235,6 @@ export const deleteAlbum = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while deleting the album.",
-      error: `Delete Album Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -338,7 +333,6 @@ export const addPhotosToAlbum = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "An unexpected error occurred while adding photos to the album.",
-      error: `Add Photos To Album Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
@@ -399,7 +393,6 @@ export const removePhotosFromAlbum = async (req, res) => {
       success: false,
       message:
         "An unexpected error occurred while removing the photo from the album.",
-      error: `Remove Photos From Album Error: ${error?.stack || error?.message || error}`,
     });
   }
 };
