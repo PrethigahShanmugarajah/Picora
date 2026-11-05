@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/immutability */
+/* eslint-disable react-hooks/set-state-in-effect */
 // Client / src / components / Photos / PhotoLightbox.jsx
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   X,
   ChevronLeftIcon,
@@ -24,73 +27,25 @@ const PhotoLightbox = ({
   onTrashPhoto,
   onAddToAlbum,
 }) => {
-  // const [showInfo, setShowInfo] = useState(false);
-  // const [currentIndex, setCurrentIndex] = useState(-1);
-
-  // useEffect(() => {
-  //   if (currentPhoto) {
-  //     const idx = photos.findIndex((p) => p._id === currentPhoto._id);
-  //     setCurrentIndex(idx >= 0 ? idx : 0);
-  //   }
-  // }, [currentPhoto, photos]);
-
   const [showInfo, setShowInfo] = useState(false);
-  const [navigation, setNavigation] = useState({
-    sourcePhotoId: null,
-    selectedPhotoId: null,
-  });
+  const [currentIndex, setCurrentIndex] = useState(-1);
 
-  const currentIndex = (() => {
-    const selectedIndex =
-      navigation.sourcePhotoId === currentPhoto?._id
-        ? photos.findIndex((p) => p._id === navigation.selectedPhotoId)
-        : -1;
-
-    const originalIndex = photos.findIndex((p) => p._id === currentPhoto?._id);
-
-    return selectedIndex >= 0
-      ? selectedIndex
-      : originalIndex >= 0
-        ? originalIndex
-        : 0;
-  })();
-
-  const handlePrev = useCallback(() => {
-    const nextIndex = currentIndex > 0 ? currentIndex - 1 : photos.length - 1;
-
-    setNavigation({
-      sourcePhotoId: currentPhoto._id,
-      selectedPhotoId: photos[nextIndex]._id,
-    });
-  }, [currentIndex, photos, currentPhoto]);
-
-  const handleNext = useCallback(() => {
-    const nextIndex = currentIndex < photos.length - 1 ? currentIndex + 1 : 0;
-
-    setNavigation({
-      sourcePhotoId: currentPhoto._id,
-      selectedPhotoId: photos[nextIndex]._id,
-    });
-  }, [currentIndex, photos, currentPhoto]);
+  useEffect(() => {
+    if (currentPhoto) {
+      const idx = photos.findIndex((p) => p._id === currentPhoto._id);
+      setCurrentIndex(idx >= 0 ? idx : 0);
+    }
+  }, [currentPhoto, photos]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-
-      if (e.key === "ArrowLeft") {
-        handlePrev();
-      }
-
-      if (e.key === "ArrowRight") {
-        handleNext();
-      }
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "ArrowRight") handleNext();
     };
     window.addEventListener("keydown", handleKeyDown);
-
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleNext, handlePrev, onClose]);
+  }, [currentIndex, photos]);
 
   if (!currentPhoto || currentIndex < 0 || !photos[currentIndex]) {
     return null;
@@ -98,13 +53,13 @@ const PhotoLightbox = ({
 
   const activePhoto = photos[currentIndex];
 
-  // const handlePrev = () => {
-  //   setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
-  // };
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : photos.length - 1));
+  };
 
-  // const handleNext = () => {
-  //   setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
-  // };
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev < photos.length - 1 ? prev + 1 : 0));
+  };
 
   const handleDownload = () => {
     const link = document.createElement("a");
@@ -157,11 +112,11 @@ const PhotoLightbox = ({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onToggleFavorite(activePhoto._id)}
-            className={`p-2.5 hover:bg-white/20 rounded-full transition cursor-pointer text-white ${activePhoto.isFavorite ? "bg-cyan-400 text-slate-900" : ""}`}
+            className={`p-2.5 hover:bg-white/20 rounded-full! transition cursor-pointer text-white ${activePhoto.isFavorite ? "bg-cyan-400 text-slate-900" : ""}`}
             title="Favorite"
           >
             <StarIcon
-              className={`size-5 ${activePhoto.isFavorite ? "fill-slate-900" : ""}`}
+              className={`size-5 ${activePhoto.isFavorite ? "fill-white" : ""}`}
             />
           </button>
 
