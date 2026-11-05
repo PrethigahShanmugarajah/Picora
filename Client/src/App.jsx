@@ -3,7 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Auth from "./pages/Auth";
 import AppLayout from "./components/Layout/AppLayout";
-import Photos from "./pages/Photos/View/Photos";
+import Photos from "./pages/Photos";
 import Favorites from "./pages/Favorites/View/Favorites";
 import Albums from "./pages/Albums/View/Albums";
 import AlbumDetail from "./pages/AlbumDetail/View/AlbumDetail";
