@@ -34,7 +34,7 @@ export const fetchStats = async () => {
     const { data } = await api.get(API_ROUTES.MEDIA.STATS);
 
     if (data?.success) {
-      toast.success(data?.message);
+      // toast.success(data?.message);
       console.log("Fetch Stats Success:", data?.message);
     } else {
       toast.error(data?.message || "Unable to fetch statistics.");
@@ -45,6 +45,28 @@ export const fetchStats = async () => {
   } catch (error) {
     toast.error(error?.response?.data?.message || error?.message);
     console.error("Fetch Stats Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Fetch Photos -------- */
+export const fetchPhotos = async (params = {}) => {
+  try {
+    const { data } = await api.get(API_ROUTES.MEDIA.BASE, { params });
+
+    if (data?.success) {
+      // toast.success(data?.message);
+      console.log("Fetch Photos Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to fetch photos.");
+      console.error("Fetch Photos Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error?.message);
+    console.error("Fetch Photos Error:", error);
 
     throw error;
   }
