@@ -69,25 +69,27 @@ export const toggleFavorite = async (id) => {
   }
 };
 
-/* -------- Move to Trash -------- */
-export const moveToTrash = async (id) => {
+/* -------- Update Media Trash Status -------- */
+export const updateMediaTrash = async (id, restore = false) => {
   try {
     const { data } = await api.patch(API_ROUTES.MEDIA.TRASH(id), {
-      restore: false,
+      restore,
     });
 
     if (data?.success) {
       toast.success(data?.message);
-      console.log("Move to Trash Success:", data?.message);
+      console.log("Update Media Trash Status Success:", data?.message);
     } else {
-      toast.error(data?.message || "Unable to move media to trash.");
-      console.error("Move to Trash Error:", data?.message);
+      toast.error(data?.message || "Unable to update media trash status.");
+      console.error("Update Media Trash Status Error:", data?.message);
     }
 
     return data;
   } catch (error) {
-    toast.error(error?.response?.data?.message || error?.message);
-    console.error("Move to Trash Error:", error);
+    toast.error(
+      error?.response?.data?.message || "Unable to update media trash status.",
+    );
+    console.error("Update Media Trash Status Error:", error);
 
     throw error;
   }
@@ -154,6 +156,52 @@ export const deleteAlbum = async (id) => {
   } catch (error) {
     toast.error(error?.response?.data?.message || "Unable to delete album.");
     console.error("Delete Album Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Empty Trash -------- */
+export const emptyTrash = async () => {
+  try {
+    const { data } = await api.delete(API_ROUTES.MEDIA.EMPTY_TRASH);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Empty Trash Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to empty trash.");
+      console.error("Empty Trash Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Unable to empty trash.");
+    console.error("Empty Trash Error:", error);
+
+    throw error;
+  }
+};
+
+/* -------- Permanently Delete Media -------- */
+export const deleteMediaPermanent = async (id) => {
+  try {
+    const { data } = await api.delete(`${API_ROUTES.MEDIA.BASE}/${id}`);
+
+    if (data?.success) {
+      toast.success(data?.message);
+      console.log("Permanently Delete Media Success:", data?.message);
+    } else {
+      toast.error(data?.message || "Unable to permanently delete media.");
+      console.error("Permanently Delete Media Error:", data?.message);
+    }
+
+    return data;
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Unable to permanently delete media.",
+    );
+    console.error("Permanently Delete Media Error:", error);
 
     throw error;
   }
