@@ -40,16 +40,6 @@ export const uploadMedia = async (req, res) => {
         responseFields: ["tags"],
       };
 
-      if (!isVideo) {
-        uploadParams.extensions = [
-          {
-            name: "google-auto-tagging",
-            minConfidence: 60,
-            maxTags: 10,
-          },
-        ];
-      }
-
       const ikRes = await imagekit.files.upload(uploadParams);
 
       const title = file.originalname;

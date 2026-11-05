@@ -52,7 +52,7 @@ const BulkSelectionBar = ({
 
         <button
           onClick={onTrash}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-rose-50 text-xs font-medium text-rose-600 transition cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-red-50 text-xs font-medium text-red-600 transition cursor-pointer"
         >
           <Trash2Icon className="size-3.5" />
           <span className="hidden sm:inline">Move to trash</span>

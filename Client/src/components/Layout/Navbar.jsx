@@ -127,7 +127,7 @@ const Navbar = ({
                     setDropdownOpen(false);
                     logout();
                   }}
-                  className="w-full text-left px-3 py-2 text-sm text-rose-600 hover:bg-rose-50 rounded-xl flex items-center gap-2 transition cursor-pointer"
+                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-2 transition cursor-pointer"
                 >
                   <LogOutIcon className="size-3.5" />
                   Sign Out

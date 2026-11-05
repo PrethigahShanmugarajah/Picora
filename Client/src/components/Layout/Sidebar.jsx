@@ -46,7 +46,10 @@ const Sidebar = ({
   const storagePercent = stats?.totalBytes
     ? Math.min(
         100,
-        Math.max(3, Math.round((stats.totalBytes / (100 * 1024 * 1024)) * 100)),
+        Math.max(
+          3,
+          Math.round((stats.totalBytes / (1024 * 1024 * 1024)) * 100),
+        ),
       )
     : 2;
 
