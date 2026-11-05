@@ -326,7 +326,7 @@ export const addPhotosToAlbum = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Photos added to the album successfully.",
+      message: "Media added to the album successfully.",
       album: populated,
     });
   } catch (error) {
